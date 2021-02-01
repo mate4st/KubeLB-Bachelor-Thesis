@@ -1,0 +1,99 @@
+1. Introduction 
+
+1.1 Motivation and goal
+
+1.2 Structure of this work
+
+
+2. Basics
+
+2.1 Load Balancing
+
+2.2 Kubernets
+
+2.3 Hybrid-Cloud 
+
+
+3. Load Balancing with and for Kubernets
+
+3.1 KKP as a father
+
+3.2 Bare metal vs. cloud
+
+
+
+4 Extending Kubernetes
+
+4.1 Operator pattern
+
+4.2 Kubebuilder
+
+4.3 Custom Resource Definitions
+
+4.4 Controller runtime
+
+
+5 Requirements
+
+5.1 Proposal
+
+5.2 Customer problems
+
+
+6 Design
+
+6.1 Operator
+
+6.2 Custom Resource Definitions
+
+6.3 Load Balancer
+
+6.4 Agent
+
+
+7 Implementation
+
+7.1 Kubebuilder 
+
+7.2 Custom Resource Definitions 
+
+7.3 Code-generator
+
+7.4 Envoy control plane
+
+
+8 Testing
+
+8.1 Controller test
+
+8.2 Load Testing
+
+9 Limitations
+
+9.1 Kubernetes network
+
+9.2 Bandwith
+
+10 Conclusion
+
+10.1 Current load balancing solutions
+
+10.2 Kubernetes as a base
+
+10.3 Envoy proxy 
+
+11 One step further
+
+11.1 TLS
+
+11.2 Multi-cluster Load Balancing
+
+11.3 Service Mesh
+
+
+Literatur
+Abbildungsverzeichnis 
+Tabellenverzeichnis
+Listings
+Glossar
+
