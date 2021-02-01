@@ -1,7 +1,116 @@
-\documentclass{article}
-\usepackage{hyperref}
-\begin{document}
-Hello world \LaTeX
+\documentclass[12pt, a4paper, twoside, pdftex]{scrbook}
 
-\url{https://linuxconfig.org}
+% Generelles
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman,main=english]{babel}
+\usepackage{setspace}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+
+\usepackage{graphicx}
+%\usepackage{caption}
+%\usepackage[nointegrals]{wasysym}
+\usepackage{tikz}
+%\usepackage{pgfplots}
+%\usepackage{wrapfig}
+
+
+% Literatur
+\usepackage[backend=biber,style=numeric,natbib=true]{biblatex}
+\usepackage{csquotes}
+
+\titlehead{
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=north east,inner sep=0.5cm] at (current page.north east)
+            {
+            \includegraphics[scale=0.5]{pictures/general/fh-muenster-logo}
+            \includegraphics[scale=0.2]{pictures/general/kubermatic-stacked}
+        };
+    \end{tikzpicture}
+}
+
+\title{\huge \textbf Design and implementation of a multi cluster load balancing within a Kubernetes environment}
+\subtitle{Bachelor thesis to obtain the academic degree Bachelor of Science in Computer Science}
+\author{Matthias Osthues\\
+Department of Electrical Engineering and Computer Science\\
+Fachhochschule Münster\\
+University of Applied Sciences}
+\publishers{
+    \begin{flushleft}
+        \small
+        	\begin{onehalfspace}
+        \begin{tabular}{l@{\hspace{1.0cm}} l}
+            & \\
+            & \\
+            & \\
+            & \\
+            & \\
+            & \\
+            & \\
+            & \\
+            & \\
+            & \\
+            & \\
+            First examiner	 	& Prof. Dr. Michael Tüxen \\
+            Second examiner 	& Dipl.-Inf. Sebastian Scheele\\
+            &\\
+            submitted on	    & xx.xx.2021 \\
+            from			    & Matthias Osthues \\
+            Matriculation-Nr.   & 776405
+        \end{tabular}
+        	\end{onehalfspace}
+    \end{flushleft}
+}
+\date{xx.xx.2021}
+\begin{document}
+    \maketitle
+
+    \newpage
+    \clearpage
+    \tableofcontents
+    \newpage
+
+    \begin{onehalfspacing}
+
+        \include{chapter/01_introduction}
+%        \include{chapter/11_grundlagen}
+%        \include{chapter/02_projektumfeld}
+%        \include{chapter/03_analyse}
+%        \include{chapter/04_entwurf}
+%        \include{chapter/05_implementierung}
+%        \include{chapter/06_test}
+%        \include{chapter/07_fazit_ausblick}
+%        \include{chapter/08_anhang}
+
+    \end{onehalfspacing}
+
+%    \include{chapter/09_verzeichnisse}
+%    \glsaddall
+%    \printglossaries
+
+    \newpage
+    \clearpage
+    \thispagestyle{plain}
+    \begin{onehalfspace}
+        \section*{Declaration of the candidate}
+        I certify that I have written the submitted work independently. All passages taken verbatim or in spirit from published or unpublished works of others have been marked as taken. \\
+        All sources and aids that I have used for the work are indicated. \\
+        All electronic copies of this work used for its evaluation have exactly the same content as this printed copy.\\
+        The work has not been submitted in the same or similar form to any other examining authority and has not yet been published.
+        I am aware that an untrue statement will have legal consequences.
+        \flushleft
+        \begin{tabular}{l@{\hspace{3.0cm}} c}
+
+            & \\ & \\
+            Hamburg xx.xx.2021 & \hrulefill \\
+            & \parbox[b]{7cm}{\centering Matthias Osthues}
+        \end{tabular}
+    \end{onehalfspace}
 \end{document}
