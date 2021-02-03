@@ -1,5 +1,53 @@
 \chapter{Basics}
 
+In this chapter I want to give you a brief overview about Load Balancing and Kubernetes.
+This is about the basics we need to understand, to understand what this Project is about.
+It is not going into detail of everything, like load balancing algorithms.
+Also, it focuses on features that are commonly used inside the cloud environment, especially Kubernetes and is not covering other scenarios.
+
 \section{Load Balancing}
 
+In simple, a load balancer is a software or hardware device which distributes incoming traffic among a set of servers.
+They usually serve as an entrypoint and offer different features in a cloud environment.
+\\
+The most obvious feature of course is to distribute traffic to multiple servers.
+Load balancers offer a variety of algorithms for how traffic is distributed among endpoints.
+The easiest approach is to use ``Random Load Balancing``.
+As the name suggests, traffic is distributed randomly to the endpoints.
+However, this can result in one endpoint receiving a lot of traffic, and others receiving very little traffic.
+To address this issue, the most common algorithm might be ``Round Robin``.
+Here traffic is sequentially forwarded to each endpoint.
+This method provides an evenly distributed amount of traffic to the endpoint.
+There are still scenarios where it might be useful to distribute traffic in another way.
+For instance, imagine an endpoint with high resource capacity that is able of processing more load than others.
+For this it makes sense to use ``Weight Selection``.
+Basically the load balancer is told to send more traffic to the higher weighted endpoints than to others.
+Another thing is ``Least Request`` where the load balancer tries to determine the endpoint with the least open requests.
+This highly depends on the load balancer implementation.
+\\
+The second feature is to dynamically change the configuration of your load balancer.
+In a production environment it is important not to interrupt your services or even dropping connections by restarting some components, especially for critical infrastructure like a load balancer.
+This is useful in terms of auto scaling with a dynamic number of endpoints, which may is based upon the current server load.
+\\
+The third one is to provide a failover for ``High Available`` setups.
+This requires some health check mechanism, like TCP or HTTP probes.
+These probes are used to determine the endpoints healthiness and mark an endpoint as unhealthy if one or more probes fail.
+When an endpoint becomes unhealthy, the load balancer stops forwarding traffic to it.
+\\
+Load balancers can operate on different levels of the Open Systems Interconnection model (OSI model).
+Those are called layer 4 (Transport Layer) or layer 7 (Applikation layer) load balancers.
+\\
+A layer 4 load balancer takes place on the Transport layer, that means they are handling transport packages like TCP or UDP.
+The fact that messages are neither inspected nor decrypted allows them to be forwarded quickly, efficiently, and securely.
+\\
+A layer 7 load balancer takes place on the Application layer, using protocols such as HTTP and SMTP.
+At this level the load balancer does have more information and can perform smarter decisions.
+In terms of HTTP this means you can take routing decisions based upon HTTP Headers.
+TLS termination is also handled by Layer 7 load balancers.
+
 \section{Kubernetes}
+
+
+\subsection{kube-proxy}
+
+
