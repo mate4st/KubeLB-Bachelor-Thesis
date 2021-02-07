@@ -1,8 +1,8 @@
 \chapter{Basics}
 
-In this chapter I want to give you a brief overview about Load Balancing and Kubernetes.
-This is about the basics we need to understand, to understand what this Project is about.
-It is not going into detail of everything, like load balancing algorithms.
+The chapter is intended to provide a basic understanding of load balancing and kubernetes.
+The focus is mainly on the parts that are needed for the further process.
+It is not going into detail of everything and won't cover all load balancing features, algorithms and Kubernetes possibilities.
 Also, it focuses on features that are commonly used inside the cloud environment, especially Kubernetes and is not covering other scenarios.
 
 \section{Load Balancing}
@@ -22,7 +22,7 @@ There are still scenarios where it might be useful to distribute traffic in anot
 For instance, imagine an endpoint with high resource capacity that is able of processing more load than others.
 For this it makes sense to use ``Weight Selection``.
 Basically the load balancer is told to send more traffic to the higher weighted endpoints than to others.
-Another thing is ``Least Request`` where the load balancer tries to determine the endpoint with the least open requests.
+Another algorithm is ``Least Request`` where the load balancer tries to determine the endpoint with the least open requests.
 This highly depends on the load balancer implementation.
 \\
 The second feature is to dynamically change the configuration of your load balancer.
@@ -61,7 +61,7 @@ This is used by kubelet to deploy and control containers on the host machine.
 \\
 Kube-proxy takes care of the networking part.
 It is responsible for routing and exposing services.
-This will be explained in more detail in the next chapter.
+A more detailed overview can be found in \autoref{sec:kubeproxy}.
 \\
 \newpage
 Kubernetes offers a various set of building blocks ("primitives"), which describe different parts in the cluster to deploy an Application.
@@ -98,7 +98,7 @@ A Pod is not created directly, instead it is described inside a Deployment, Stat
 
 A Deployment takes track of the current state, make changes to an existing Pods in a controlled rate, scaling and more.
 It is widely used to deploy applications in a general purpose way.
-The ``spec.template`` describes the actual pod created by the deployment, with it's metadata and Pod spec.
+The ``spec.template`` describes the actual pod created by the deployment, with its metadata and Pod spec.
 The \autoref{fig:deployment} illustrates an example deployment, with two containers and ports, inside a pod.
 Deployments have a selector which tells the controller which Pod is controlled by this deployment.
 The label ``app: foo-bar``is used as the selector and is also set inside the template, so all Pods created by this template are referenced to the deployment.
@@ -129,8 +129,8 @@ To keep track of which endpoints are currently available, the controller automat
     \label{fig:endpoints}
 \end{figure}
 
-As \autoref{fig:endpoints} shows, an endpoint holds a list of IP addresses (in our case its just one as we only have one Pod deployed), as well as the associated ports.
-In addition, the endpoints object is filled with further meta information by the controller, which we will not look at in detail.
+As \autoref{fig:endpoints} shows, an endpoint holds a list of IP addresses (in this case its just one as only one Pod is deployed), as well as the associated ports.
+In addition, the endpoints object is filled with further meta information by the controller.
 Kubernetes scans for Pods inside the cluster that match the given selector and updates the corresponding Endpoint object.
 For a service without a selector, no associated endpoint is created and must be created otherwise.
 TCP, UDP and SCTP are supported as protocols, TCP is the default.
@@ -158,7 +158,7 @@ Type NodePort allocates a random port, by default in between of 30000-32767, and
 Thus, the service is externally accessible on all nodes of the cluster via the allocated port.
 \\
 Type LoadBalancer does the same as node port with the addition of an external implementation to dynamically create a load balancer and point it to the opened node ports.
-This is not implemented by default and requires some extra setup for the cluster, what is explained in more detail in the next chapter.
+This is not implemented by default and requires some extra setup for the cluster, what is explained in more detail in \autoref{sec:ExternalLoadBalancer}.
 \\
 A service has a corresponding ``Endpoints`` object.
 Inside the cluster these are created automatically, via a selector inside the service object, that points to pod.
@@ -178,4 +178,4 @@ Thus, applications do not have to be directly exposed via a service, they only n
 \end{figure}
 
 To fulfill the ingress an IngressController must be installed.
-The IngressController and it's purpose will be explained in the next chapter.
+The IngressController and it's purpose will be explained in \autoref{sec:IngressController}.

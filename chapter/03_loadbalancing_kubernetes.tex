@@ -2,7 +2,7 @@
 
 Now that we know some basics let's take a deeper look inside the Service object and external Load Balancing.
 
-\section{kube-proxy}
+\section{kube-proxy}\label{sec:kubeproxy}
 
 As mentioned in the previous chapter, kube-proxy reflects services on each node.
 It implements a network proxy and a load balancer, as well as a virtual ip for services, that is used for routing inside the cluster.
@@ -47,7 +47,7 @@ Then iptables are used as fallback, but with ipset to keep the number of rules l
 Since IPVS comes with a load balancer implementation, it also offers several load balancing algorithms to choose from.
 Among them are ``Round Robin``, ``least connection``, ``shortest expected delay`` and more.
 
-\section{External Load Balancer}
+\section{External Load Balancer}\label{sec:ExternalLoadBalancer}
 
 Kubernetes services offer two ways to expose an application to the outside world.
 These are set via the ``.spec.type`` field inside the service object.
@@ -63,7 +63,7 @@ Since the LoadBalancer is not part of Kubernetes, it requires an external config
 Within the Kubernetes cluster, a controller is installed which watches for the type LoadBalancer and then, depending on the infrastructure setup, creates or configures an external load balancer and sets the status within the cluster.
 The status field should be updated with an allocated IP address of the load balancer, that is used to access the application from the outside.
 
-\section{Ingress Controller}
+\section{Ingress Controller}\label{sec:IngressController}
 
 An Ingress Controller is an application that usually runs inside a Kubernetes cluster and offers features of Layer 7 load balancing.
 It watches for ingress objects and configures itself accordingly.
