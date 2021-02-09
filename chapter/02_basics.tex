@@ -1,4 +1,4 @@
-\chapter{Basics}
+\chapter{Basics}\label{basics}
 
 The chapter is intended to provide a basic understanding of load balancing and kubernetes.
 The focus is mainly on the parts that are needed for the further process.
@@ -11,26 +11,28 @@ In simple, a load balancer is a software or hardware device which distributes in
 They usually serve as an entrypoint and offer different features in a cloud environment.
 \\
 The most obvious feature is to distribute traffic to multiple servers.
-Load balancers offer a variety of algorithms for how traffic is distributed among endpoints.
-The easiest approach is to use ``Random Load Balancing``.
-As the name suggests, traffic is distributed randomly to the endpoints.
-However, this can result in one endpoint receiving a lot of traffic, and others receiving very little traffic.
-To address this issue, the most common algorithm might be ``Round Robin``.
-Here traffic is sequentially forwarded to each endpoint.
-This method provides an evenly distributed amount of traffic to the endpoint.
-There are still scenarios where it might be useful to distribute traffic in another way.
-For instance, imagine an endpoint with high resource capacity that is able of processing more load than others.
-For this it makes sense to use ``Weight Selection``.
-Basically the load balancer is told to send more traffic to the higher weighted endpoints than to others.
-Another algorithm is ``Least Request`` where the load balancer tries to determine the endpoint with the least open requests.
-This highly depends on the load balancer implementation.
-\\
+Load balancers offer a variety of algorithms for how traffic is distributed among endpoints.~\cite{ALLEN-LOAD-BALANCING}
+
+\begin{itemize}
+    \item \textit{Random Load Balancing} \\
+    As the name suggests, traffic is distributed randomly to the endpoints.
+    This can result in one endpoint receiving a lot of traffic, and others receiving very little traffic.
+    \item \textit{Round Robin} \\
+    Traffic is sequentially forwarded to each endpoint.
+    This method provides an evenly distributed amount of traffic to the endpoints.
+    \item \textit{Weight Selection} \\
+    The load balancer is told to send more traffic to the higher weighted endpoints than to others.
+    \item \textit{Least Request} \\
+    The load balancer tries to determine the endpoint with the least open requests.
+    This highly depends on the load balancer implementation.
+\end{itemize}
+
 The second feature is to dynamically change the configuration of your load balancer.
 In a production environment it is important not to interrupt your services or even dropping connections by restarting some components, especially for critical infrastructure like a load balancer.
 This is useful in terms of auto scaling with a dynamic number of endpoints, which may is based upon the current server load.
 \\
 The third one is to provide a failover for ``High Available`` setups.
-This requires some health check mechanism, like TCP or HTTP probes.
+This requires a health check mechanism, like TCP or HTTP probes.
 These probes are used to determine the endpoints healthiness and mark an endpoint as unhealthy if one or more probes fail.
 When an endpoint becomes unhealthy, the load balancer stops forwarding traffic to it.
 \\
@@ -43,27 +45,34 @@ The fact that messages are neither inspected nor decrypted allows them to be for
 A layer 7 load balancer takes place on the Application layer, using protocols such as HTTP and SMTP.
 At this level the load balancer does have more information and can perform smarter decisions.
 In terms of HTTP this means you can take routing decisions based upon HTTP Headers.
-TLS termination is also handled by Layer 7 load balancers.
+TLS termination is also handled by Layer 7 load balancers.~\cite{NICHOLSON-LOAD-BALANCING}
 
 \section{Kubernetes}
 
-Kubernetes is an open-source container-orchestration platform for automating deployments, scaling and management.
-
+``Kubernetes is an open-source container-orchestration system for automating computer application deployment, scaling, and management``\cite{Kubernetes}.
 A Cluster contains a so called control-plane which is responsible for the cluster state.
 The control-plane is a set of controllers which observe different objects of the cluster, react to changes and trie to bring the cluster into it's desired state.
+\autoref{fig:kubernetes} gives you an overview about the Kubernetes Components
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{media/02/kubernetes}
+    \caption{"Components of Kubernetes" by Kubernetes SIG Docs CC BY 4.0}
+    \label{fig:kubernetes}
+\end{figure}
+
+As \autoref{fig:kubernetes} shows, a node within the cluster consists of two components running on the host machine.
+
+The kubelet daemon is responsible for the node status, and the containers that are deployed to it.
+It serves like an agent to the cluster and communicates with the api server.
+Together with kubelet, the host needs an application that implements the Container Runtime Interface.\footnote{CRI: the Container Runtime Interface\footcite{CRI}}
+This is needed to run the actual container.
 \\
-Each node inside the cluster is running three key components on the host machine: kubelet, kube-proxy and a container runtime.
+Besides kubelet, kube-proxy is responsible for the networking part like routing and exposing services.
+This is important for services to communicate inside the cluster.
+A more detailed overview can be found in \autoref{sec:kubeproxy}.\cite{KUBERNETES-COMPONENTS}
 \\
-Kubelet is responsible for the node status, and the containers that are deployed to it.
-\\
-The container runtime is an application that implements the Container Runtime Interface.
-This is used by kubelet to deploy and control containers on the host machine.
-\\
-Kube-proxy takes care of the networking part.
-It is responsible for routing and exposing services.
-A more detailed overview can be found in \autoref{sec:kubeproxy}.
-\\
-\newpage
+
 Kubernetes offers a various set of building blocks ("primitives"), which describe different parts in the cluster to deploy an Application.
 Each object shares the same basic data structure.
 
@@ -79,7 +88,7 @@ Each object shares the same basic data structure.
     The implementation differs for every object.
 \end{itemize}
 
-Some objects also have a status field that describes the current state.
+Some objects also have a status field that describes the current state.~\cite{KUBERNETES-OBJECTS}
 
 \subsection{Pods}
 The first basic one is a ``Pod`` that is a group of one or more containers.
@@ -92,7 +101,7 @@ Then it can make sense to deploy these containers together in one pod.
 This ensures that the containers are deployed on the same node and have the same resources at their disposal, which has a positive effect on performance.
 \\
 It holds information of the docker image, volumes, ports and more.
-A Pod is not created directly, instead it is described inside a Deployment, StatefulSet or DaemonSet.
+A Pod is not created directly, instead it is described inside a Deployment, StatefulSet or DaemonSet.~\cite{KUBERNETES-POD}
 
 \subsection{Deployment}
 
@@ -104,7 +113,7 @@ Deployments have a selector which tells the controller which Pod is controlled b
 The label ``app: foo-bar``is used as the selector and is also set inside the template, so all Pods created by this template are referenced to the deployment.
 If applied, Kubernetes will create one pod, according to the replicas field, with two containers.
 The containers use the same image, but with different environment variables and Ports.
-Those control what the HTTP service of the image will return and on what port it listens.
+Those control what the HTTP service of the image will return and on what port it listens.~\cite{KUBERNETES-DEPLOYMENT}
 
 \begin{figure}[H]
     \centering
@@ -161,13 +170,13 @@ Type LoadBalancer does the same as node port with the addition of an external im
 This is not implemented by default and requires some extra setup for the cluster, what is explained in more detail in \autoref{sec:ExternalLoadBalancer}.
 \\
 A service has a corresponding ``Endpoints`` object.
-Inside the cluster these are created automatically, via a selector inside the service object, that points to pod.
+Inside the cluster these are created automatically, via a selector inside the service object, that points to pod..~\cite{KUBERNETES-SERVICE}
 \subsection{Ingress}
 
 The Ingress Object is built as an addition to services and offers load balancing, TLS Termination or name-based virtual hosting.
 Typically, it exposes only HTTP/HTTPS, other applications should make use of the service type NodePort or LoadBalancer.
 It provides a number of configurable rules that decide to which backend the traffic is routed.
-Thus, applications do not have to be directly exposed via a service, they only need to be internal accessible via ClusterIP.
+Thus, applications do not have to be directly exposed via a service, they only need to be internal accessible via ClusterIP.~\cite{KUBERNETES-INGRESS}
 \autoref{fig:ingress} shows an example of an ingress object that forwards incoming HTTP requests with the /foo path to the foo-service on port 8080, and /bar path to the bar-service on port 8081.
 
 \begin{figure}[H]
