@@ -68,7 +68,7 @@ The status field should be updated with an allocated IP address of the load bala
 An Ingress Controller is an application that usually runs inside a Kubernetes cluster and offers features of Layer 7 load balancing.
 It watches for ingress objects and configures itself accordingly.
 They usually serve as entrypoints for HTTP applications within the cluster.
-Therefore, it is common to have a service of type LoadBalancer that points to the pods of the Ingress Controller.
+Therefore, it is mandatory to have a service of type LoadBalancer that points to the pods of the Ingress Controller.
 This then forwards the traffic to the appropriate pods based on rules from an Ingress object.
 Thus, applications do not have to be directly exposed via a service, but can be appropriately routed via an Ingress object.
 In addition to the features of the Ingress Controller, this method also offers a more dynamic approach, since the entry point into the cluster only has to be defined once.
@@ -86,4 +86,4 @@ The cloud controller manager takes care of the connection of cloud-specific api'
 Also ingress controllers can be installed automatically without any manual effort.
 \\
 In a bare metal environment, there is no one-size-fits-all solution, as it is highly dependent on the surrounding infrastructure.
-There are a number of open source solutions such as MetallB or kube-vip, but these require manual setup.
+There are a number of open source solutions such as MetallB\footnote{https://metallb.universe.tf/} or kube-vip\footnote{https://kube-vip.io/}, but these require manual setup.
