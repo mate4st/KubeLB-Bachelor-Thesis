@@ -2,7 +2,7 @@
 
 % Generelles
 \usepackage[utf8]{inputenc}
-\usepackage[ngerman,main=english]{babel}
+\usepackage[main=english]{babel}
 \usepackage{setspace}
 \usepackage{hyperref}
 \hypersetup{
@@ -12,19 +12,20 @@
     linkcolor=black,
     urlcolor=black
 }
+\usepackage[a4paper, left=1.5cm, right=3.0cm, bottom=3.5cm]{geometry}
+\usepackage{float}
 
-
+% Images
 \usepackage{graphicx}
-%\usepackage{caption}
-%\usepackage[nointegrals]{wasysym}
+\usepackage[export]{adjustbox}
 \usepackage{tikz}
-%\usepackage{pgfplots}
-%\usepackage{wrapfig}
-
 
 % Literatur
-\usepackage[backend=biber,style=numeric,natbib=true]{biblatex}
+\usepackage[backend=biber,style=numeric]{biblatex}
 \usepackage{csquotes}
+
+
+\addbibresource{library.bib} %Imports bibliography file
 
 \titlehead{
     \begin{tikzpicture}[remember picture,overlay]
@@ -93,7 +94,7 @@ University of Applied Sciences}
 
     \end{onehalfspacing}
 
-%    \include{chapter/09_verzeichnisse}
+    \include{chapter/12_directories}
 %    \glsaddall
 %    \printglossaries
 
@@ -102,7 +103,8 @@ University of Applied Sciences}
     \thispagestyle{plain}
     \begin{onehalfspace}
         \section*{Declaration of the candidate}
-        I certify that I have written the submitted work independently. All passages taken verbatim or in spirit from published or unpublished works of others have been marked as taken. \\
+        I certify that I have written the submitted work independently.
+        All passages taken verbatim or in spirit from published or unpublished works of others have been marked as taken. \\
         All sources and aids that I have used for the work are indicated. \\
         All electronic copies of this work used for its evaluation have exactly the same content as this printed copy.\\
         The work has not been submitted in the same or similar form to any other examining authority and has not yet been published.

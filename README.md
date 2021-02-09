@@ -1,8 +1,11 @@
 # Bachelor Thesis
 
-Run
+Run `pdflatex -file-line-error -interaction=nonstopmode -synctex=1 -output-format=pdf -output-directory=out main.tex`
 
-`pdflatex -file-line-error -interaction=nonstopmode -synctex=1 -output-format=pdf -output-directory=out main.tex`
+#### Bibliography 
+
+`biber --input-directory=out main`
+
 
 #### Dependencies
 
