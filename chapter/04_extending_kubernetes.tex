@@ -3,7 +3,7 @@
 This chapter is about how to extend Kubernetes.
 There are several ways to extend Kubernetes, this chapter focuses on Custom Resources and Controllers.
 
-\section{Operator pattern}
+\section{Operator pattern}\label{sec:operator-pattern}
 
 Operators are software that integrates in Kubernetes and manage applications.
 The name comes from the fact that the software performs the tasks of a human operator.
@@ -16,7 +16,7 @@ With containers, the deployment of applications has been standardized.
 However, a sysadmin is still required to react to state changes, that happen frequently inside a cloud native environment.
 The operator therefore acts as a kind of robot sysadmin who can react directly to changes.~\cite{RED-HAT-OPERATOR}
 
-\section{Custom Resource Definitions}
+\section{Custom Resource Definitions}\label{sec:custom-resource-definitions}
 
 In Kubernetes Custom Resource Definitions (CRD) are used to extend the Kubernetes api.
 A resource is a kubernetes api endpoint, like a Pod or Deployment.
@@ -26,7 +26,7 @@ This allows data to be stored within the cluster.
 Custom resources can be registered and de-registered at runtime.~\cite{KUBERNETES-CRD}
 
 
-\section{Controllers}
+\section{Controllers}\label{sec:controllers}
 
 A controller has a control loop that constantly monitors the status of the cluster.
 Depending on whether a certain change takes place, the controller reacts and makes adjustments where needed.

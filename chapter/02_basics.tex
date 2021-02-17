@@ -103,7 +103,7 @@ This ensures that the containers are deployed on the same node and have the same
 It holds information of the docker image, volumes, ports and more.
 A Pod is not created directly, instead it is described inside a Deployment, StatefulSet or DaemonSet.~\cite{KUBERNETES-POD}
 
-\subsection{Deployment}
+\subsection{Deployment}\label{subsec:deployment}
 
 A Deployment takes track of the current state, make changes to an existing Pods in a controlled rate, scaling and more.
 It is widely used to deploy applications in a general purpose way.
@@ -123,7 +123,7 @@ Those control what the HTTP service of the image will return and on what port it
 \end{figure}
 
 
-\subsection{Service}
+\subsection{Service}\label{subsec:service}
 To expose an application and make it accessible for others, the ``Service`` object is used.
 This is an abstraction of the networking layer and decides how to expose an application.
 Services are used to open and map one or multiple ports of a Pod.
@@ -171,7 +171,7 @@ This is not implemented by default and requires some extra setup for the cluster
 \\
 A service has a corresponding ``Endpoints`` object.
 Inside the cluster these are created automatically, via a selector inside the service object, that points to pod.~\cite{KUBERNETES-SERVICE}
-\subsection{Ingress}
+\subsection{Ingress}\label{subsec:ingress}
 
 The Ingress Object is built as an addition to services and offers load balancing, TLS Termination or name-based virtual hosting.
 Typically, it exposes only HTTP/HTTPS, other applications should make use of the service type NodePort or LoadBalancer.
