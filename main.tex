@@ -5,6 +5,7 @@
 \usepackage[main=english]{babel}
 \usepackage{setspace}
 \usepackage{hyperref}
+\usepackage{color}
 \usepackage{array}
 \hypersetup{
     colorlinks,
@@ -20,6 +21,23 @@
 \usepackage{graphicx}
 \usepackage[export]{adjustbox}
 \usepackage{tikz}
+
+%Code
+\usepackage{listings}
+\lstset{
+    frame=tb,
+    aboveskip=3mm,
+    belowskip=3mm,
+    basicstyle=\fontsize{8}{8}\selectfont\ttfamily,
+    keywordstyle=\color{red},
+    numbers=left,
+    breaklines=true,
+    numbersep=5pt,
+    showstringspaces=false,
+    stringstyle=\color{blue},
+    tabsize=4,
+    language=Go
+}
 
 % Literatur
 \usepackage[backend=biber,style=numeric]{biblatex}

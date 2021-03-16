@@ -5,7 +5,7 @@ Since the core product of Kubermatic is based on Kubernetes, the KubeLB project 
 To use concepts from KKP, the goal is to use a Kubernetes cluster for load balancing.
 This promotes a homogeneous environment of Kubernetes clusters without introducing additional complexity of third party systems, which simplifies both the deployment and the maintenance of the KubeLb application.
 
-\section{Manager}
+\section{Manager}\label{sec:manager}
 
 The Manager, will serve as an operator, as already explained in \autoref{sec:operator-pattern} and implement a controller like in \autoref{sec:controllers}.
 Its task is to take care of the configuration of the load balancer within the load balancer cluster.
@@ -23,7 +23,7 @@ The manager recognizes this and sets the status field within the CRD.
 \\
 For layer 7 implementation, the Manager makes use of the Ingress\autoref{subsec:ingress}, therefore any Ingress Controller \autoref{sec:IngressController} musst be installed as well.
 
-\section{Agent}
+\section{Agent}\label{sec:agent}
 
 The Agent runs inside a User Cluster and watch for Services and Ingress Resources.
 If needed it creates a CRD with the details needed for the Manager to do the load balancing.
@@ -69,15 +69,14 @@ It is not necessary to expose the load balancer, so the agent sets the service t
 At this point the Agent creates a HTTPLoadBalancer, based on the Ingress inside the User cluster, inside the LB Cluster.
 The Manager takes care that the Ingress is configured to use the corresponding LoadBalancer service, which was created before.
 
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{media/06/kubelb-l7}
-    \caption{"KubeLB Layer 7 architecture"  by Kubermatic GmbH Apache License 2.0}
+    \caption{"KubeLB Layer 7 architecture" by Kubermatic GmbH Apache License 2.0}
     \label{fig:kubelb-l7}
 \end{figure}
 
-\section{Envoy}
+\section{Envoy}\label{sec:envoy}
 
 Envoy will serve as a load balancer instance due to its design for large modern service oriented architectures and high level feature set
 \\
@@ -104,4 +103,4 @@ In contrast to a control-plane the data-plane controls the data requests.
 To fulfill that purpose the Envoy api implements a data-plane.
 In Practice that means it is possible to control envoy proxies via this api.
 This is very useful in cloud native environments, where services change their configuration on runtime, nodes get added or deleted and so on.
-For that reason the Manager can implement the envoy data-plane api and control the current configuration of all it's load balancers.
+For that reason the Manager implements the envoy data-plane api and is in control of the configuration of all it's load balancers.
