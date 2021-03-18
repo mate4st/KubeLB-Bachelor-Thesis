@@ -78,7 +78,7 @@ The Manager takes care that the Ingress is configured to use the corresponding L
 
 \section{Envoy}\label{sec:envoy}
 
-Envoy will serve as a load balancer instance due to its design for large modern service oriented architectures and high level feature set
+Envoy will serve as a load balancer instance due to its design for large modern service oriented architectures and high level feature set.
 \\
 The following describes the most important functions needed for KubeLB.
 
@@ -95,12 +95,13 @@ The following describes the most important functions needed for KubeLB.
     Envoy supports active and also passive health checking, to determine healthy endpoint targets.
 \end{itemize}
 
-This is just a brief overview of what KubeLB is probably going to make use of.~\cite{WHAT-IS-ENVOY}
+This is just a brief overview of the features of envoy and what KubeLB is probably going to make use of.~\cite{WHAT-IS-ENVOY}
 \\
+%Todo: rewrite
 Another important feature is its data plane api.
 In contrast to a control-plane the data-plane controls the data requests.
 \\
 To fulfill that purpose the Envoy api implements a data-plane.
-In Practice that means it is possible to control envoy proxies via this api.
+In practice that means it is possible to control envoy proxies via this api.
 This is very useful in cloud native environments, where services change their configuration on runtime, nodes get added or deleted and so on.
 For that reason the Manager implements the envoy data-plane api and is in control of the configuration of all it's load balancers.

@@ -1,5 +1,273 @@
 \chapter{Testing}
 
-\section{Controller test}
+This chapter covers unit tests, and the advanced controller tests of the KubeLB project.
+%Assumes general go knowledge unti testing
 
-\section{Load Testing}
+\section{Unit test}\label{sec:unit-test}
+In general unit tests are used to test independent parts or units of the code meet their specifications and perform as expected.
+However, since most of the code is not an independent unit, unit tests have a smaller role in testing the application.
+This is because KubeLB is a Kubernetes operator and thus relies on interaction with the Kubernetes API for the most part.
+\\
+Go supports unit tests and provides the testing package for this purpose.
+Each test is passed a testing object which gets informed about the result and unifies the execution and logging.
+\\
+\autoref{lst:desired-endpoint-test} shows a part of the unit test for the EndpointIsDesiredState() function of the \textit{Endpoints} struct, which is used in \autoref{lst:nodecontroller-reconcile}, to check for node changes.
+Since the struct and its functions are not part of Kubernetes or the controller runtime, they can be tested individually.
+The test consists of several test scenarios that are executed, and the result of which is checked for the expected value.
+\textit{createNodeList()} is a helper function that creates a NodeList with one node for each specified address and sets the address to the passed type.
+\\
+What exactly is tested can be read from the name of the test cases.
+
+\begin{lstlisting}[caption={Unit test for \textit{EndpointIsDesiredState()} function}, label={lst:desired-endpoint-test}]
+package kubelb
+
+import (
+	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"testing"
+)
+
+func TestEndpoints_EndpointIsDesiredState(t *testing.T) {
+	type fields struct {
+		ClusterEndpoints    []string
+		EndpointAddressType corev1.NodeAddressType
+	}
+	type args struct {
+		desired *corev1.NodeList
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			name: "scenario 1: endpoint is desired state",
+			fields: fields{
+				ClusterEndpoints:    []string{
+					"127.0.0.1",
+				},
+				EndpointAddressType: corev1.NodeExternalIP,
+			},
+			args: args{
+				desired: createNodeList([]string{"127.0.0.1"}, corev1.NodeExternalIP) ,
+
+			},
+			want: true,
+		},
+		{
+			name: "scenario 2: endpoint is not in desired state",
+			fields: fields{
+				ClusterEndpoints:    []string{
+					"127.0.0.1",
+				},
+				EndpointAddressType: corev1.NodeInternalIP,
+			},
+			args: args{
+				desired: createNodeList([]string{"127.0.0.2"}, corev1.NodeInternalIP) ,
+
+			},
+			want: false,
+		},
+		{
+			name: "scenario 3: endpoint is in desired state for multiple Node Addresses",
+			fields: fields{
+				ClusterEndpoints:    []string{
+					"127.0.0.1",
+					"127.0.0.2",
+				},
+				EndpointAddressType: corev1.NodeExternalIP,
+			},
+			args: args{
+				desired: createNodeList([]string{"127.0.0.1", "127.0.0.2"}, corev1.NodeExternalIP) ,
+			},
+			want: true,
+		},
+		{
+			name: "scenario 4: endpoint is not in desired state for multiple Node Addresses",
+			fields: fields{
+				ClusterEndpoints:    []string{
+					"127.0.0.1",
+					"127.0.0.2",
+				},
+				EndpointAddressType: corev1.NodeExternalIP,
+			},
+			args: args{
+				desired: createNodeList([]string{"127.0.0.1", "127.0.0.2", "127.0.0.3"}, corev1.NodeExternalIP) ,
+			},
+			want: false,
+		},
+		{
+			name: "scenario 5: endpoint is not in desired state as the internal ip is used",
+			fields: fields{
+				ClusterEndpoints:    []string{
+					"127.0.0.1",
+				},
+				EndpointAddressType: corev1.NodeInternalIP,
+			},
+			args: args{
+				desired: &corev1.NodeList{
+					TypeMeta: v1.TypeMeta{},
+					ListMeta: v1.ListMeta{},
+					Items:    []corev1.Node{{
+						TypeMeta:   v1.TypeMeta{},
+						ObjectMeta: v1.ObjectMeta{},
+						Spec:       corev1.NodeSpec{},
+						Status:     corev1.NodeStatus{
+							Addresses: []corev1.NodeAddress{
+								{
+									Type:    corev1.NodeExternalIP,
+									Address: "127.0.0.1",
+								},
+								{
+									Type:    corev1.NodeInternalIP,
+									Address: "127.0.0.2",
+								},
+							},
+						},
+					},
+					},
+				} ,
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &EndpointsEndpoints{
+				ClusterEndpoints:    tt.fields.ClusterEndpoints,
+				EndpointAddressType: tt.fields.EndpointAddressType,
+			}
+			if got := r.EndpointIsDesiredState(tt.args.desired); got != tt.want {
+				t.Errorf("EndpointIsDesiredState() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+\end{lstlisting}
+
+
+\section{Controller test}\label{sec:controller-test}
+
+As explained in \autoref{sec:unit-test}, unit tests cannot cover the code of the controllers.
+To address this issue, the controller-runtime module comes with the envtest\footnote{https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest} package that enables testing the controllers, by creating a fake Kubernetes API.
+As test framework KubeLB uses Ginko\footnote{https://onsi.github.io/ginkgo/} and Gomega\footnote{https://onsi.github.io/gomega/} for the controller tests, which is recommended by the Kubebuilder authors.
+%Todo: check if cite above is needed for recommendation note
+In short Ginko allows the developer to write tests of BDD \footnote{https://wikipedia.org/wiki/behavior-driven\_development} style and Gomega is used as a Matcher.
+\\
+When the controller test suite is started the \textit{BeforeSuite()} function runs once at the beginning.
+It initializes the fake Kubernetes api through the envtest package, by setting the CRD and providing a client configuration.
+The client configuration is than used for the Manager which therefore creates the actual client for the controller.
+\begin{lstlisting}[caption={TCPLoadBalancer controller integration test}, label={lst:controller-test-setup}]
+
+var _ = BeforeSuite(func() {
+    logf.SetLogger(zap.New(zap.UseDevMode(false)))
+
+    By("bootstrapping test environment")
+    testEnv = &envtest.Environment{
+        CRDDirectoryPaths: []string{filepath.Join("..", "..", "..", "config", "crd", "bases")},
+    }
+
+    var err error
+    cfg, err = testEnv.Start()
+    Expect(err).ToNot(HaveOccurred())
+    Expect(cfg).ToNot(BeNil())
+
+    err = kubelbk8ciov1alpha1.AddToScheme(scheme.Scheme)
+    Expect(err).NotTo(HaveOccurred())
+
+    ctrl.SetLogger(klogr.New())
+    ctx := ctrl.SetupSignalHandler()
+
+    envoyServer, err = envoy.NewServer(":8001", true)
+
+    Expect(err).ToNot(HaveOccurred())
+
+    //+kubebuilder:scaffold:scheme
+
+    k8sManager, err := ctrl.NewManager(cfg, ctrl.Options{
+        Scheme: scheme.Scheme,
+    })
+    Expect(err).ToNot(HaveOccurred())
+
+    err = (&TCPLoadBalancerReconciler{
+        Client:         k8sManager.GetClient(),
+        Cache:          k8sManager.GetCache(),
+        Scheme:         k8sManager.GetScheme(),
+        EnvoyCache:     envoyServer.Cache,
+        EnvoyBootstrap: envoyServer.GenerateBootstrap(),
+    }).SetupWithManager(k8sManager, ctx)
+    Expect(err).ToNot(HaveOccurred())
+
+    k8sClient = k8sManager.GetClient()
+    Expect(k8sClient).ToNot(BeNil())
+
+    go func() {
+        err = k8sManager.Start(ctx)
+        Expect(err).ToNot(HaveOccurred())
+    }()
+
+}, 60)
+\end{lstlisting}
+
+With this set up the controller is using the fake api, which is also used inside the test to trigger the reconcile event and check for the expected outcome.
+In \autoref{lst:controller-test} a new TCPLoadBalancer is created, and the test checks if the corresponding deployment and service are created by the controller.
+The deployment consist of an envoy that also needs the correct configuration what is checked as well.
+%Todo: describe limitations of fake api
+
+\begin{lstlisting}[caption={TCPLoadBalancer controller integration test}, label={lst:controller-test}]
+var _ = Describe("TcpLb deployment and service creation", func() {
+
+	// Define utility constants for object names and testing timeouts/durations and intervals.
+	const (
+		tcpLbName      = "serious-application"
+		tcpLbNamespace = "default"
+
+		timeout  = time.Second * 10
+		interval = time.Millisecond * 250
+	)
+
+	var lookupKey = types.NamespacedName{Name: tcpLbName, Namespace: tcpLbNamespace}
+	var ctx = context.Background()
+
+	Context("When creating a TcpLoadBalancer", func() {
+		var tcpLb = GetDefaultTcpLoadBalancer(tcpLbName, tcpLbNamespace)
+		It("Should create an envoy deployment", func() {
+
+			Expect(k8sClient.Create(ctx, tcpLb)).Should(Succeed())
+
+			By("creating a new deployment")
+
+			createdDeployment := &appsv1.Deployment{}
+
+			Eventually(func() bool {
+				err := k8sClient.Get(ctx, lookupKey, createdDeployment)
+				return err == nil
+			}, timeout, interval).Should(BeTrue())
+
+			Expect(createdDeployment.Spec.Template.Spec.Containers[0].Args[1]).Should(Equal(envoyServer.GenerateBootstrap()))
+			Expect(createdDeployment.OwnerReferences[0].Name).Should(Equal(tcpLbName))
+
+			By("creating a corresponding service")
+
+			createdService := &corev1.Service{}
+
+			Eventually(func() bool {
+				err := k8sClient.Get(ctx, lookupKey, createdService)
+				return err == nil
+			}, timeout, interval).Should(BeTrue())
+
+			Expect(createdDeployment.Spec.Template.Labels[kubelb.LabelAppKubernetesName]).Should(Equal(createdService.Spec.Selector[kubelb.LabelAppKubernetesName]))
+			Expect(createdService.OwnerReferences[0].Name).Should(Equal(tcpLbName))
+
+			By("creating an envoy snapshot")
+
+			snapshot, err := envoyServer.Cache.GetSnapshot(tcpLbName)
+			Expect(err).ToNot(HaveOccurred())
+
+			Expect(reflect.DeepEqual(snapshot, envoycp.MapSnapshot(tcpLb, "0.0.1"))).To(BeTrue())
+
+		})
+	})
+})
+\end{lstlisting}
