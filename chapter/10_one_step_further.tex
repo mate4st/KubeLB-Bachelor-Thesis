@@ -1,7 +1,32 @@
 \chapter{One step further}
 
+In this chapter, an outlook on further features for the KubeLB Project will be given.
+
 \section{TLS}
 
-\section{Multi-cluster Load Balancing}
+TLS termination is a common feature for L7 load balancers and supported by Envoy.
+For this it is necessary to provide key material to Envoy.
+Kubernetes provides the secret of type \textit{kubernetes.io/tls} for this purpose, which contains a TLS key pair.
+This secret can be mounted in multiple pods and used by Envoy for TLS termination.
+\\
+To create the secret and the key material, there is the possibility of automated solutions like Let's encrypt\footnote{https://letsencrypt.org/}.
+In conjunction with Cert-manager\footnote{https://cert-manager.io/}, this enables simple integration of automatically generated certificates, which can be ensured by KubeLB Manager.
+Secret management systems such as Vault\footnote{https://www.vaultproject.io/} can also be integrated into KubeLB Manager.
+\\
+In case the customer has a certificate without using an internal secret management, a manual creation of the secret within the KubeLB cluster could also be a solution.
+An integration of user cluster secrets made usable in LB-CLuster is also an option, even if it is not the best solution from a security point of view.
 
-\section{Service Mesh}
+\section{Multi-cluster Service Load Balancing}
+
+Kubernetes does not offer any concept of inter cluster communication.
+However, there are many good reasons to split an application across multiple clusters.
+In a scenario where one application is deployed to multiple clusters,r a load balancer is required to dedicate the Traffic across the clusters.
+KubeLB could be a solution and provide the load balancer instance with the proper endpoints set.
+\\
+Today's approaches use a service mesh like istio\footnote{https://istio.io/latest/docs/concepts/what-is-istio/}, which gives the cluster operator complete control of the traffic flow.
+However, these are not trivial to configure and might have a big impact on the cluster, since they affect the entire networking.
+\\
+The KEP-1645\footnote{https://github.com/kubernetes/enhancements/tree/master/keps/sig-multicluster/1645-multi-cluster-services-api} (Kubernetes Enhancement Proposal) of sig-multicluster, suggest an implementation of a multi cluster service api to the Kubernetes Core.
+This should help with the implementation for KubeLB and could be a convenient and clean way for a multi-cluster service load balancing solution, without any third party requirements.
+
+
