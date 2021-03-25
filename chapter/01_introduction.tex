@@ -1,10 +1,62 @@
 \chapter{Introduction}
 
-\section{Motivation and goal}
 
-\section{Cloud Native}
+\section{Motivation and goal}
+%Cloud computing
+With the advent of cloud computing platforms such as AWS, GCP or Azure, the supply of dynamically scalable compute resources has changed.
+To ensure the scalability of an application, this can be used to dynamically create new resources in case of a large load on the existing systems.
+This requires a dynamic environment in which new servers can be automatically integrated into the existing infrastructure.
+Among other things, network configurations and server provisioning must be ensured.
+However, classical systems are often not built to scale across multiple hosts and must be reinvented or adapted accordingly.
+\\
+%cloud native
+To simplify the complexity of managing compute resources, as well as deploying and scaling an application, so-called container orchestration systems were built with the advent of Docker.
+One of these systems, which has found great acceptance in the market, is Kubernetes.
+It follows the cloud-native\footnote{https://github.com/cncf/toc/blob/main/DEFINITION.md} approach, which is due to a constantly changing environment.
+In the following, the terms CLuster refers to a Kubernetes cluster and nodes are the number of servers that are grouped together in a cluster.
+In the event of a crash or the removal or addition of a node, Kubernetes ensures that the application can continue to run.
+With Kubernetes, it is therefore comparatively easy to distribute an application across multiple servers and ensure scalability.
+\\
+%Load Balancers in cloud native
+With the potentially ever-changing number of nodes, the question of load balancing also arises.
+Typically, load balancers are used to serve as entry points and distribute traffic across multiple servers.
+In a cloud-native environment, the configuration of a load balancer must also adapt to the constantly changing environment.
+\\
+Kubernetes provides a basis for dynamically creating/deleting and adapting an external load balancer.
+However, it does not offer an out-of-the-box implementation of load balancers for clusters.
+The implementations of load balancer is only available at various IaaS platforms (GCP, AWS, Azure).
+This means for bare-metal clusters a manual integration for a load balancer service.
+\\
+%KKP
+Kubermatic GmbH sells the Kubermatic Kubernetes Platform\footnote{https://www.kubermatic.com/products/kubermatic/}, which extends the cloud-native approach to Kubernetes clusters.
+The platform can be used to dynamically create, delete and modify clusters.
+With the advent of large scale deployments with multiple clusters, there is a need for a centralized load balancing solution for dynamically created clusters in a bare metal environment.
+There are several solutions for implementing load balancers, but these are designed for one cluster and usually require their own network setup.
+The Project KubeLB\footnote{https://github.com/kubermatic/kubelb} aims to provide a load balancer integration for multiple clusters and takes the advantages of kubernetes itself.
 
 \newpage
 
 \section{Structure of this work}
+Following the introduction, the basics in the area of cloud-native and Kubernetes, as well as load balancing are first laid.
 
+In the following chapter, the function of load balancers and the included network components and options with respect to Kubernetes will be discussed in more detail.
+
+Chapter four discusses concepts and options within Kubernetes for extending functionality.
+
+Subsequently, chapter five analyzes the concepts and transferability of the Kubermatic Kubernetes Platform and presents the KubeLB proposal.
+
+In the sixth chapter, responsibility is distributed among subsystems, and a mechanism for communication between the individual components is described.
+The interaction of the components is then modeled based on the underlying features of Layer 4 and Layer 7 load balancing.
+Finally, the choice of the load balancer used is discussed.
+
+Chapter seven describes the implementation of the components developed in chapter six and their integration into Kubernetes.
+
+Following the implementation, software tests will be described.
+
+The final chapter of the thesis draws a conclusion with regard to the technologies used, and the architectural design decisions.
+
+This is followed in the last chapter by an outlook on further features that have not yet been implemented.
+
+
+%\section{Cloud Native}
+%Todo: add section
