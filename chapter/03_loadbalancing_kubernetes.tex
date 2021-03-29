@@ -1,12 +1,12 @@
 \chapter{Load Balancing with and for Kubernets}
 
-Now that we know some basics let's take a deeper look inside the Service object and external Load Balancing.
+Equipped with the basics, this chapter provides a deeper understanding of services and external load balancing within Kubernetes.
 
 \section{kube-proxy}\label{sec:kubeproxy}
 
 As mentioned in the previous chapter, kube-proxy reflects services on each node.
-It implements a network proxy and a load balancer, as well as a virtual ip for services, that is used for routing inside the cluster.
-In general kube-proxy watches the control plane for changes to services and endpoints objects and opens ports on the host machine.
+It implements a network proxy, a load balancer, as well as a virtual ip for services, that is used for routing inside the cluster.
+In general kube-proxy watches the control-plane for changes to services and endpoints objects and opens ports on the host machine.
 The behaviour of the load balancer implementation as well as the proxy can be controller via the proxy-mode option.
 Kube-proxy also takes on the task of forwarding traffic that hits a node where the application is not deployed to the appropriate node.~\cite{KUBERNETES-SERVICE}
 
@@ -17,7 +17,7 @@ In this mode kube-proxy takes care of routing and acts as a central part.
 Incoming connections are routed through kube-proxy and forwarded to one of the corresponding endpoints.
 The endpoint is chosen by default via a round-robin algorithm.
 \\
-For internal routing it installs iptable rules for the clusterIp and port.
+For internal routing it installs iptable rules for the ClusterIP and port.
 These rules redirect the traffic to the proxy port, which proxies the Pod.
 \\
 In terms of failures kube-proxy can detect this and retry routing to another pod.
@@ -44,38 +44,38 @@ With a certain number of rules, iptables loses a lot of performance, because all
 There are scenarios that IPVS cannot handle, for example NodePort type service.
 Then iptables are used as fallback, but with ipset\footnote{https://ipset.netfilter.org/} to keep the number of rules low.
 \\
-Since IPVS comes with a load balancer implementation, it also offers several load balancing algorithms to choose from.
-Among them are ``Round Robin``, ``least connection``, ``shortest expected delay`` and more.~\cite{KUBERNETES-SERVICE}
+Since IPVS comes with a load balancer implementation, it also offers several load balancing algorithms to choose from.~\cite{KUBERNETES-SERVICE}
 
 \section{External Load Balancer}\label{sec:ExternalLoadBalancer}
 
 Kubernetes services offer two ways to expose an application to the outside world.
-These are set via the ``.spec.type`` field inside the service object.
+These are set via the \textit{spec.type} field inside the service object.
 \\
-If the type is not specified, ClusterIp is set as default and the service is only accessible within the cluster.
+If the type is not specified, ClusterIP is set as default, and the service is only accessible within the cluster.
 \\
 With the type NodePort, a random port, by default in between of 30000-32767, is chosen and opened on all nodes of the cluster.
 Thus, the service is externally accessible on all nodes of the cluster via the allocated port.
-At this point you could manually configure an external load balancer which uses the nodes and the appropriate port as endpoints.
-But since the node ports can change, because they are usually allocated randomly, it makes sense to automate this process, also to avoid manual configuration which may cause human errors.
-So let's introduce the type LoadBalancer, which makes the service in principle just like type NodePort externally accessible, with the small difference that an external load balancer is requested and a status field is set.
+At this point a manual configured external load balancer which uses the nodes, and the appropriate port as endpoints, would work well.
+Since the node ports can change, because they are usually allocated randomly, it makes sense to automate this process, also to avoid manual configuration which may cause human errors.
+\\
+With the type LoadBalancer, which in principle makes the service accessible from the outside in the same way as the type NodePort, with the small difference that an external LoadBalancer is requested and a status field is set.
 Since the LoadBalancer is not part of Kubernetes, it requires an external configuration of the load balancer.
 Within the Kubernetes cluster, a controller is installed which watches for the type LoadBalancer and then, depending on the infrastructure setup, creates or configures an external load balancer and sets the status within the cluster.
 The status field should be updated with an allocated IP address of the load balancer, that is used to access the application from the outside.~\cite{KUBERNETES-SERVICE}
 
 \section{Ingress Controller}\label{sec:IngressController}
 
-An Ingress Controller is an application that usually runs inside a Kubernetes cluster and offers features of Layer 7 load balancing.
+An ingress controller usually runs inside a Kubernetes cluster and offers features of Layer 7 load balancing.
 It watches for ingress objects and configures itself accordingly.
-They usually serve as entrypoints for HTTP applications within the cluster.
+They usually serve as entry points for HTTP applications within the cluster.
 Therefore, it is mandatory to have a service of type LoadBalancer that points to the pods of the Ingress Controller.
 This then forwards the traffic to the appropriate pods based on rules from an Ingress object.
-Thus, applications do not have to be directly exposed via a service, but can be appropriately routed via an Ingress object.
-In addition to the features of the Ingress Controller, this method also offers a more dynamic approach, since the entry point into the cluster only has to be defined once.
+Thus, applications do not have to be directly exposed via a service, but can be appropriately routed via an ingress.
+In addition to the features of the IngressController, this method also offers a more dynamic approach, since the entry point into the cluster only has to be defined once.
 TLS termination can also be performed at the ingress controller, which simplifies certificate management.~\cite{KUBERNETES-INGRESS}
 \\
 An ingress controller, like the external load balancer, is not installed by default.
-There are several implementations of the Ingress Controller that can be installed.~\cite{KUBERNETES-INGRESS-CONTROLLER}
+There are several implementations of the ingress controller that can be installed.~\cite{KUBERNETES-INGRESS-CONTROLLER}
 
 \section{Bare metal vs. cloud}
 

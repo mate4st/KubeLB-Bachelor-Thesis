@@ -1,10 +1,10 @@
-\chapter{Proposal}
+\chapter{Requirements}
 
-In the cloud native community it is common to create a Proposal.
-These should describe what the idea is, the goals being pursued, and include an architectural overview.
-The original proposal can be found in the Kubermatic repository\footnote{https://github.com/kubermatic/kubermatic/blob/master/docs/proposals/kubelb.md} on github.
+In diesem Kapitel werden die Rahmenbedingungen, welche bei Kubermatic vorhanden und für die Entwicklung der Anwendung relevant sind, untersucht.
+Aus den Ergebnissen der Analyse sollen in einem zweiten Schritt Anforderungen an den zu entwickelnden Dienst abgeleitet werden.
 
-\section{Kubermatic Kubernetes Operator}
+
+\section{Kubermatic Kubernetes Platform}
 
 ``Kubermatic Kubernetes Platform (KKP) is in an open source project to centrally manage the global automation of thousands of Kubernetes clusters across multicloud, on-prem and edge with unparalleled density and resilience``~\cite{KKP-GITHUB}.
 
@@ -29,25 +29,33 @@ Especially for large scale deployments it is recommended to run several independ
 Thus, only worker nodes have to be created and connected.
 Virtual machines are created via a supported provider, which are then provisioned by KKP and added as nodes.
 \\
-The master as well as the seed cluster should be operated in a High Available setup.
+The master as well as the seed cluster should be operated in a high available setup.
 This offers the advantage that the Kubernetes control plane of the customer cluster is automatically a High Available setup.
+
 
 \section{KubeLB}\label{sec:KubeLB}
 
-The idea behind KubeLb is to adopt Concepts of KKP for LoadBalancing in multicloud, on-prem and edge Kubernetes environments.
-
-As mentioned in \autoref{sec:ExternalLoadBalancer}, LoadBalancers needs to be integrated manually to every cluster.
+The idea behind KubeLB is to adopt concepts of KKP for load balancing in multicloud, on-prem and edge Kubernetes environments.
+As mentioned in \autoref{sec:ExternalLoadBalancer}, load balancers need to be integrated manually to every cluster.
 This is especially needed for bare metal environments, where no cloud provider solution is available.
-The already existing open source solutions for the implementation of the LoadBalancer, target single Kubernetes clusters, and are not designed for a highly dynamic multi cloud infrastructure.
+The already existing open source solutions for the implementation of the load balancer, target single Kubernetes clusters, and are not designed for a highly dynamic multi cloud infrastructure.
 \\
-%Describe needed features
-The key feature is to make LoadBalancing easily integrated and available in many, dynamically created and deleted, Kubernetes clusters.
-%Compare features with open source stuff
-
-%Describe possible features
-
-
-
-
-%Customers?
-
+The main feature is the easy integration and availability of load balancing in many, dynamically created, Kubernetes clusters.
+These clusters are referred to as \textit{user clusters} in the following.
+For this purpose, a dedicated cluster is provided, which deploys a load balancer within the cluster, referred to as \textit{load balancer cluster} in the following.
+In order to expose the load balancer in the cluster to the outside world, it is necessary for the load balancer cluster to have a load balancer implementation.
+This has the advantage that load balancer integration only has to be performed once for the load balancer cluster, and simplifies the management of external IP addresses, as these can be managed centrally.
+All features of the Kubernetes Service object of the load balancer type should be supported.
+\\
+In addition to the load balancer integration, layer 7 load balancing should also be offered.
+This refers in particular to the Ingress resource and the ingress controller.
+Since this, like the load balancer, is not automatically available within a Kubernetes cluster, integration should also be offered here.
+For this purpose, a load balancer with Layer 7 properties, analogous to the Layer 4 load balancer, is to be deployed and made available within the load balancer cluster.
+All features of the Kubernetes ingress object should be supported.
+\\
+To pass the requests for a load balancer or an ingress resource to the load balancer cluster, an Agent is provided within the user clusters.
+The agent acts as a kind of cloud controller\footnote{https://kubernetes.io/docs/concepts/architecture/cloud-controller/}, which manages external resources of the cluster.
+\\
+In the cloud native community it is common to create a Proposal.
+These should describe what the idea is, the goals being pursued, and include an architectural overview.
+The original proposal can be found in the Kubermatic repository\footnote{https://github.com/kubermatic/kubermatic/blob/master/docs/proposals/kubelb.md} on github.

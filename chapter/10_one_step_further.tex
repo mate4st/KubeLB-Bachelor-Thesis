@@ -20,7 +20,7 @@ An integration of user cluster secrets made usable in LB-CLuster is also an opti
 
 Kubernetes does not offer any concept of inter cluster communication.
 However, there are many good reasons to split an application across multiple clusters.
-In a scenario where one application is deployed to multiple clusters,r a load balancer is required to dedicate the Traffic across the clusters.
+In a scenario where one application is deployed to multiple clusters, a load balancer is required to dedicate the traffic across the clusters.
 KubeLB could be a solution and provide the load balancer instance with the proper endpoints set.
 \\
 Today's approaches use a service mesh like istio\footnote{https://istio.io/latest/docs/concepts/what-is-istio/}, which gives the cluster operator complete control of the traffic flow.
@@ -28,5 +28,3 @@ However, these are not trivial to configure and might have a big impact on the c
 \\
 The KEP-1645\footnote{https://github.com/kubernetes/enhancements/tree/master/keps/sig-multicluster/1645-multi-cluster-services-api} (Kubernetes Enhancement Proposal) of sig-multicluster, suggest an implementation of a multi cluster service api to the Kubernetes Core.
 This should help with the implementation for KubeLB and could be a convenient and clean way for a multi-cluster service load balancing solution, without any third party requirements.
-
-

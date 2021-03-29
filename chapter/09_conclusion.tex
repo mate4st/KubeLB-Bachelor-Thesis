@@ -16,8 +16,8 @@ In principle, it is possible to span a Kubernetes cluster across multiple nodes,
 Since any traffic from multiple user clusters is routed through at least one node of the LB cluster, the LB cluster is also dependent on network resources.
 Also the resources of the cluster, in terms of CPU and memory, have to be considered to run all required load balancer instances.
 For example, if the LB cluster consists of several nodes, this increases the resource availability of CPU and memory, but not necessarily of network throughput.
-If all nodes are ultimately deployed on the same machine in a data center with a 1GB line, this does not increase throughput.
-In practice, the network performance of the cluster is therefore heavily dependent on the underlying infrastructure and it will not always be possible to distribute the nodes well from a network and resource perspective.
+If all nodes are ultimately deployed on the same machine in a data center, this does not increase throughput.
+In practice, the network performance of the cluster is therefore heavily dependent on the underlying infrastructure, and it will not always be possible to distribute the nodes well from a network and resource perspective.
 
 \section{Envoy proxy}
 Envoy turns out to be a very sophisticated Proxy.
@@ -29,4 +29,4 @@ To implement new features, the existing base configuration can be easily extende
 The Control-Plane implementation is well suited for Kubernetes.
 This way, it is quite easy to manage multiple Envoy instances via a single server.
 This allows to change configurations without disconnecting or restarting the load balancer.
-In this way, envoy fulfills its main task and enables customers to change their configuration in operational mode.
+In this way, Envoy fulfills its main task and enables customers to change their configuration in an operational mode.

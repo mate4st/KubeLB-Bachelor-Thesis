@@ -1,7 +1,6 @@
 \chapter{Testing}
 
 This chapter covers unit tests, and the advanced controller tests of the KubeLB project.
-%Assumes general go knowledge unti testing
 
 \section{Unit test}\label{sec:unit-test}
 In general unit tests are used to test independent parts or units of the code meet their specifications and perform as expected.
@@ -11,7 +10,7 @@ This is because KubeLB is a Kubernetes operator and thus relies on interaction w
 Go supports unit tests and provides the testing package for this purpose.
 Each test is passed a testing object which gets informed about the result and unifies the execution and logging.
 \\
-\autoref{lst:desired-endpoint-test} shows a part of the unit test for the EndpointIsDesiredState() function of the \textit{Endpoints} struct, which is used in \autoref{lst:nodecontroller-reconcile}, to check for node changes.
+\autoref{lst:desired-endpoint-test} shows a part of the unit test for the \textit{EndpointIsDesiredState()} function of the \textit{Endpoints} struct, which is used in \autoref{lst:nodecontroller-reconcile}, to check for node changes.
 Since the struct and its functions are not part of Kubernetes or the controller runtime, they can be tested individually.
 The test consists of several test scenarios that are executed, and the result of which is checked for the expected value.
 \textit{createNodeList()} is a helper function that creates a NodeList with one node for each specified address and sets the address to the passed type.

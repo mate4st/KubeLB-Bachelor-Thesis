@@ -18,17 +18,15 @@ The operator therefore acts as a kind of robot sysadmin who can react directly t
 
 \section{Custom Resource Definitions}\label{sec:custom-resource-definitions}
 
-In Kubernetes Custom Resource Definitions (CRD) are used to extend the Kubernetes api.
+In Kubernetes \textit{Custom Resource Definitions}, in short CRDs, are used to extend the Kubernetes api.
 A resource is a kubernetes api endpoint, like a Pod or Deployment.
 These endpoints and data structures are predefined by Kubernetes.
 A Custom Resource extends this, with its own endpoint and data structure.
 This allows data to be stored within the cluster.
 Custom resources can be registered and de-registered at runtime.~\cite{KUBERNETES-CRD}
 
-
 \section{Controllers}\label{sec:controllers}
-
-A controller has a control loop that constantly monitors the status of the cluster.
+A controller implements a control loop that constantly monitors the status of the cluster.
 Depending on whether a certain change takes place, the controller reacts and makes adjustments where needed.
 \\
 The controller observes at least one Kubernetes resource.
