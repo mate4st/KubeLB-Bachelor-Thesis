@@ -10,7 +10,7 @@ The load balancing part focuses on features that are commonly used inside a clou
 A load balancer is a software or hardware device which distributes traffic among a set of servers.
 They usually serve as an entrypoint and offer different features in a cloud environment.
 \\
-Load balancers offer a variety of algorithms for how traffic is distributed among endpoints.
+Load balancers offer a variety of algorithms for how traffic is distributed among endpoints:
 
 \begin{itemize}\label{item:lb-algorithms}
     \item \textit{Random Load Balancing} \\
@@ -29,20 +29,20 @@ Load balancers offer a variety of algorithms for how traffic is distributed amon
 Choosing the best algorithm is not always trivial and depends on the application.~\cite{ALLEN-LOAD-BALANCING}
 \\
 For high available setups a load balancer can provide a failover mechanism.
-This requires a health check mechanism, like TCP or HTTP probes.
+This requires a health check mechanism, like Transmission Control Protocol (TCP) or Hypertext Transfer Protocol (HTTP) probes.
 These probes are used to determine the endpoints healthiness and mark an endpoint as unhealthy if one or more probes fail.
 When an endpoint becomes unhealthy, the load balancer stops forwarding traffic to it.
 \\
 Load balancers can operate on different levels of the Open Systems Interconnection model (OSI model).
 Those are called layer 4 (Transport Layer) or layer 7 (Applikation layer) load balancers.
 \\
-A layer 4 load balancer takes place on the Transport layer, that means they are handling transport packages like TCP or UDP.
+A layer 4 load balancer takes place on the Transport layer, that means they are handling transport packets like TCP or UDP.
 The fact that messages are neither inspected nor decrypted allows them to be forwarded quickly, efficiently, and securely.
 \\
-A layer 7 load balancer takes place on the Application layer, using protocols such as HTTP and SMTP.
+A layer 7 load balancer takes place on the Application layer, using protocols such as Hypertext Transfer Protocol and Stream Control Transmission Protocol (SCTP).
 At this level the load balancer does have more information and can perform smarter decisions.
 In terms of HTTP this means it can take routing decisions based upon HTTP Headers.
-TLS termination is also handled by Layer 7 load balancers.~\cite{NICHOLSON-LOAD-BALANCING}
+Transport Layer Security (TLS) termination is also handled by Layer 7 load balancers.~\cite{NICHOLSON-LOAD-BALANCING}
 
 \section{Kubernetes}
 ``Kubernetes is an open-source container-orchestration system for automating computer application deployment, scaling, and management``\cite{Kubernetes}.
@@ -61,7 +61,7 @@ It also contains the information about the current cluster status.
 As \autoref{fig:kubernetes} shows, a node within the cluster consists of two components running on the host machine.
 
 The kubelet daemon is responsible for the node status, and the containers that are deployed to it.
-It serves like an agent to the cluster and communicates with the api server.
+It serves like an agent to the cluster and communicates with the application programming interface (API) server.
 Together with kubelet, the host needs an application that implements the Container Runtime Interface.\footnote{CRI: the Container Runtime Interface\footcite{CRI}}
 This is required to run the actual container.
 \\
@@ -76,7 +76,7 @@ Each object shares the same basic data structure.
 
 \begin{itemize}
     \item \textit{apiVersion} \\
-    The api version to be used, ether alpha, beta, or stable in different versions.
+    The API version to be used, either alpha, beta, or stable in different versions.
     \item \textit{kind} \\
     What kind is the object to create.
     \item \textit{metadata} \\
@@ -124,7 +124,7 @@ Those control what the HTTP service of the image will return and on what port it
 \subsection{Service}\label{subsec:service}
 To expose an application and make it accessible for others, the service object is used.
 This is an abstraction of the networking layer and decides how to expose an application.
-services are used to open and map one or multiple ports of a pod.
+Services are used to open and map one or multiple ports of a pod.
 The actual pod where the service applies to, is chosen by a selector.
 This is important so that the controller knows to which pods the traffic is routed.
 To keep track of which endpoints are currently available, the controller automatically creates an endpoint object.
@@ -181,4 +181,4 @@ Thus, applications do not have to be directly exposed via a service, they only n
 \end{figure}
 
 To fulfill the ingress an IngressController must be installed.
-The IngressController and it's purpose will be explained in \autoref{sec:IngressController}.
+The IngressController and its purpose will be explained in \autoref{sec:IngressController}.

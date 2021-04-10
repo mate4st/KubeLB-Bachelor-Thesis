@@ -1,8 +1,7 @@
 \chapter{Requirements}
 
-In diesem Kapitel werden die Rahmenbedingungen, welche bei Kubermatic vorhanden und für die Entwicklung der Anwendung relevant sind, untersucht.
-Aus den Ergebnissen der Analyse sollen in einem zweiten Schritt Anforderungen an den zu entwickelnden Dienst abgeleitet werden.
-
+In this chapter, the framework conditions that exist at Kubermatic and are relevant for the development of the application are examined.
+In a second step, requirements for the service to be developed are to be derived from the results of the analysis.
 
 \section{Kubermatic Kubernetes Platform}
 
@@ -14,7 +13,7 @@ This includes a Multicloud Self Service Portal, HA Self-healing Infrastructure, 
 A detailed list of the key features can be found on the Kubermatic website.\footnote{https://www.kubermatic.com/products/kubermatic/}
 \\
 To achieve resilience, KKP relies on Kubernetes itself.
-This requires a so-called master cluster in which Kubermatic is installed, the master is the central instance in which all clusters are managed via KKP api.
+This requires a so-called master cluster in which Kubermatic is installed, the master is the central instance in which all clusters are managed via KKP API.
 
 \begin{figure}[H]
     \centering
@@ -56,6 +55,6 @@ All features of the Kubernetes ingress object should be supported.
 To pass the requests for a load balancer or an ingress resource to the load balancer cluster, an Agent is provided within the user clusters.
 The agent acts as a kind of cloud controller\footnote{https://kubernetes.io/docs/concepts/architecture/cloud-controller/}, which manages external resources of the cluster.
 \\
-In the cloud native community it is common to create a Proposal.
-These should describe what the idea is, the goals being pursued, and include an architectural overview.
+In the cloud native community it is common to create a proposal.
+This should describe what the idea is, the goals being pursued, and include an architectural overview.
 The original proposal can be found in the Kubermatic repository\footnote{https://github.com/kubermatic/kubermatic/blob/master/docs/proposals/kubelb.md} on github.

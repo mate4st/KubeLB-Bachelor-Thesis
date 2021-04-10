@@ -7,7 +7,7 @@ Equipped with the basics, this chapter provides a deeper understanding of servic
 As mentioned in the previous chapter, kube-proxy reflects services on each node.
 It implements a network proxy, a load balancer, as well as a virtual ip for services, that is used for routing inside the cluster.
 In general kube-proxy watches the control-plane for changes to services and endpoints objects and opens ports on the host machine.
-The behaviour of the load balancer implementation as well as the proxy can be controller via the proxy-mode option.
+The behaviour of the load balancer implementation as well as the proxy can be controlled via the proxy-mode option.
 Kube-proxy also takes on the task of forwarding traffic that hits a node where the application is not deployed to the appropriate node.~\cite{KUBERNETES-SERVICE}
 
 \subsection{User space proxy mode}
@@ -28,7 +28,7 @@ Due to the performance loss and problems with reliability this is not a recommen
 \subsection{iptables proxy mode}
 
 This mode completely rely on iptables and do not proxy all traffic directly through kube-proxy.
-For each service kube-proxy installs a set of iptable rules, which capture traffic to the Service's clusterIp and port, and forward the traffic to the Pod.
+For each service kube-proxy installs a set of iptable rules, which captures traffic to the Service's ClusterIP and port, and forwards the traffic to the Pod.
 The endpoint by default is chosen randomly.
 \\
 Iptables won't recognize failures like timeouts.
@@ -77,13 +77,13 @@ TLS termination can also be performed at the ingress controller, which simplifie
 An ingress controller, like the external load balancer, is not installed by default.
 There are several implementations of the ingress controller that can be installed.~\cite{KUBERNETES-INGRESS-CONTROLLER}
 
-\section{Bare metal vs. cloud}
+\section{Bare metal and cloud}
 
-As mentioned in the previous sections, things like external load balancers and ingress controller require some manual setup.
+As mentioned in the previous sections, external load balancers and ingress controller require a manual setup.
 \\
 In a cloud environment with managed Kubernetes, the cloud provider typically installs a custom cloud controller manager inside the clusters control plane.
-The cloud controller manager takes care of the connection of cloud-specific api's via which, for example, an external load balancer is configured.
+The cloud controller manager takes care of the connection of cloud-specific API's via which, for example, an external load balancer is configured.
 Also ingress controllers can be installed automatically without any manual effort.
 \\
 In a bare metal environment, there is no one-size-fits-all solution, as it is highly dependent on the surrounding infrastructure.
-There are a number of open source solutions such as MetallB\footnote{https://metallb.universe.tf/} or kube-vip\footnote{https://kube-vip.io/}, but these require manual setup.
+There are a number of open source solutions such as MetalLB\footnote{https://metallb.universe.tf/} or kube-vip\footnote{https://kube-vip.io/}, but these require manual setup.

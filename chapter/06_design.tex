@@ -8,19 +8,19 @@ This promotes a homogeneous environment of Kubernetes clusters without introduci
 \section{Manager}\label{sec:manager}
 
 The Manager, will serve as an operator, as already explained in \autoref{sec:operator-pattern} and implement a controller like in \autoref{sec:controllers}.
-Its task is to observer a CRD\autoref{sec:custom-resource-definitions}, and operate the load balancers within the load balancer cluster.
+Its task is to observe a CRD~(see \autoref{sec:custom-resource-definitions}), and operate the load balancers within the load balancer cluster.
 Those CRD's hold the desired configuration for the load balancers, and are called TCPLoadBalancer for Layer 4, and HTTPLoadBalancer for Layer 7 load balancing.
 \\
 Within the load balancer cluster, different Kubernetes resources are used for this purpose.
-The deployment \autoref{subsec:deployment} creates the actual load balancer within the cluster.
-The service \autoref{subsec:service} exposes the load balancer deployment to the outside via a service type LoadBalancer.
+The deployment~(see \autoref{subsec:deployment}) creates the actual load balancer within the cluster.
+The service~(see \autoref{subsec:service}) exposes the load balancer deployment to the outside via a service type LoadBalancer.
 It should be noted that the load balancer cluster requires a load balancer implementation.
 This can be either a cloud provider, or an opensource single cluster implementation.
 \\
 Since the created service is of type load balancer, the status field of the service gets updated with the external IP address.
 The Manager should observe this and set the status field within the CRD.
 \\
-For layer 7 implementation, the Manager makes use of the ingress\autoref{subsec:ingress}, therefore any ingress controller \autoref{sec:IngressController} musst be installed as well.
+For layer 7 implementation, the Manager makes use of the ingress~(see \autoref{subsec:ingress}), therefore any ingress controller~(see \autoref{sec:IngressController}) must be installed as well.
 
 \section{Agent}\label{sec:agent}
 
@@ -56,7 +56,7 @@ Based on this, the Manager creates or updates the load balancer deployment, and 
 
 Layer 7 load balancing has a bit more complexity, as \autoref{fig:kubelb-l7} shows, it relies on more components.
 
-In normal Kubernetes the ingress controller\autoref{sec:IngressController} serve as an entrypoint, because it is assumed that no ingress controller is installed inside the user cluster some extra steps are required.
+In normal Kubernetes the ingress controller serve as an entrypoint, because it is assumed that no ingress controller is installed inside the user cluster some extra steps are required.
 At first the service to expose via ingress could be of type ClusterIP, therefore it is not reachable for the load balancer inside the load balancer cluster.
 In this case the Agent copies the existing service and creates a new one of type node port, so it is actually exposed and accessible to the load balancer.
 \\
@@ -78,6 +78,7 @@ The Manager takes care that the ingress is configured to use the corresponding l
 \section{Envoy}\label{sec:envoy}
 
 Envoy is chosen as a load balancer instance because of its design for large modern service oriented architectures and its high feature set.
+Nginx and HA-Proxy offer similar functionalities, but are not initially developed for the required purposes inside a cloud native environment.
 \\
 In the following, the most important functions needed for KubeLB are described.
 
@@ -96,10 +97,10 @@ In the following, the most important functions needed for KubeLB are described.
 
 This is just a brief overview of the features of Envoy and what KubeLB is probably going to make use of.~\cite{WHAT-IS-ENVOY}
 \\
-Another important feature is Envoys data plane api.
+Another important feature is Envoys data plane API.
 In contrast to a control-plane the data-plane controls the data requests.
 \\
-To fulfill that purpose the Envoy api implements a data-plane.
-In practice that means it is possible to control envoy proxies via this api.
+To fulfill that purpose the Envoy API implements a data-plane.
+In practice that means it is possible to control envoy proxies via this API.
 This is very useful in cloud native environments, where services change their configuration on runtime, nodes get added or deleted and so on.
-For that reason the Manager implements the envoy data-plane api and is in control of the configuration of all it's load balancers.
+For that reason the Manager implements the envoy data-plane API and is in control of the configuration of all it's load balancers.

@@ -145,17 +145,15 @@ func TestEndpoints_EndpointIsDesiredState(t *testing.T) {
 }
 \end{lstlisting}
 
-
 \section{Controller test}\label{sec:controller-test}
 
 As explained in \autoref{sec:unit-test}, unit tests cannot cover the code of the controllers.
 To address this issue, the controller-runtime module comes with the envtest\footnote{https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/envtest} package that enables testing the controllers, by creating a fake Kubernetes API.
 As test framework KubeLB uses Ginko\footnote{https://onsi.github.io/ginkgo/} and Gomega\footnote{https://onsi.github.io/gomega/} for the controller tests, which is recommended by the Kubebuilder authors.
-%Todo: check if cite above is needed for recommendation note
-In short Ginko allows the developer to write tests of BDD \footnote{https://wikipedia.org/wiki/behavior-driven\_development} style and Gomega is used as a Matcher.
+In short Ginko allows the developer to write tests of BDD\footnote{https://wikipedia.org/wiki/behavior-driven\_development} style and Gomega is used as a Matcher.
 \\
 When the controller test suite is started the \textit{BeforeSuite()} function runs once at the beginning.
-It initializes the fake Kubernetes api through the envtest package, by setting the CRD and providing a client configuration.
+It initializes the fake Kubernetes API through the envtest package, by setting the CRD and providing a client configuration.
 The client configuration is than used for the Manager which therefore creates the actual client for the controller.
 \begin{lstlisting}[caption={TCPLoadBalancer controller integration test}, label={lst:controller-test-setup}]
 
@@ -209,10 +207,9 @@ var _ = BeforeSuite(func() {
 }, 60)
 \end{lstlisting}
 
-With this set up the controller is using the fake api, which is also used inside the test to trigger the reconcile event and check for the expected outcome.
+With this set up the controller is using the fake API, which is also used inside the test to trigger the reconcile event and check for the expected outcome.
 In \autoref{lst:controller-test} a new TCPLoadBalancer is created, and the test checks if the corresponding deployment and service are created by the controller.
 The deployment consist of an envoy that also needs the correct configuration what is checked as well.
-%Todo: describe limitations of fake api
 
 \begin{lstlisting}[caption={TCPLoadBalancer controller integration test}, label={lst:controller-test}]
 var _ = Describe("TcpLb deployment and service creation", func() {

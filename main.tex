@@ -1,10 +1,15 @@
 \documentclass[12pt, a4paper, twoside, pdftex]{scrbook}
 
-% Generelles
+% General
 \usepackage[utf8]{inputenc}
 \usepackage[main=english]{babel}
 \usepackage{setspace}
 \usepackage{hyperref}
+
+% Capitalize label for autoref
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Subsection}
+
 \usepackage{color}
 \usepackage{array}
 \hypersetup{
@@ -39,7 +44,7 @@
     language=Go
 }
 
-% Literatur
+% Literature
 \usepackage[backend=biber,style=numeric]{biblatex}
 \usepackage{csquotes}
 \usepackage{xcolor}
@@ -132,7 +137,7 @@ University of Applied Sciences}
         \begin{tabular}{l@{\hspace{3.0cm}} c}
 
             & \\ & \\
-            Hamburg xx.xx.2021 & \hrulefill \\
+            Hamburg 14.04.2021 & \hrulefill \\
             & \parbox[b]{7cm}{\centering Matthias Osthues}
         \end{tabular}
     \end{onehalfspace}

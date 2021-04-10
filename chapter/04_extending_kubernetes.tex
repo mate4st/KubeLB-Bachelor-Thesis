@@ -6,10 +6,10 @@ There are several ways to extend Kubernetes, this chapter focuses on Custom Reso
 \section{Operator pattern}\label{sec:operator-pattern}
 
 Operators are software that integrates in Kubernetes and manage applications.
-The name comes from the fact that the software performs the tasks of a human operator.
+The name originates from the fact that the software performs the tasks of a human operator.
 The operator knows the system and how to deploy and configure it for different scenarios and at scale.~\cite{KUBERNETES-OPERATOR}
 \\
-In traditional, a system admin knows about the software, takes care of the deployment, monitoring and backups.
+A system admin knows about the software, takes care of the deployment, monitoring and backups.
 With the advent of the DevOps movement, this tradition has changed dramatically.
 The management of applications, monitoring, backups, and entire cloud environments has been centralized and versioned using Infrastructure as Code.
 With containers, the deployment of applications has been standardized.
@@ -18,8 +18,8 @@ The operator therefore acts as a kind of robot sysadmin who can react directly t
 
 \section{Custom Resource Definitions}\label{sec:custom-resource-definitions}
 
-In Kubernetes \textit{Custom Resource Definitions}, in short CRDs, are used to extend the Kubernetes api.
-A resource is a kubernetes api endpoint, like a Pod or Deployment.
+In Kubernetes \textit{Custom Resource Definitions}, in short CRDs, are used to extend the Kubernetes API.
+A resource is a kubernetes API endpoint, like a Pod or Deployment.
 These endpoints and data structures are predefined by Kubernetes.
 A Custom Resource extends this, with its own endpoint and data structure.
 This allows data to be stored within the cluster.
