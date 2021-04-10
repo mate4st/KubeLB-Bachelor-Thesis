@@ -5,15 +5,15 @@ There are several ways to extend Kubernetes, this chapter focuses on Custom Reso
 
 \section{Operator pattern}\label{sec:operator-pattern}
 
-Operators are software that integrates in Kubernetes and manage applications.
+Operators are pieces of software that integrate in Kubernetes and manage applications.
 The name originates from the fact that the software performs the tasks of a human operator.
-The operator knows the system and how to deploy and configure it for different scenarios and at scale.~\cite{KUBERNETES-OPERATOR}
+The operator knows the system and knows how to deploy and configure it for different scenarios and at scale.~\cite{KUBERNETES-OPERATOR}
 \\
-A system admin knows about the software, takes care of the deployment, monitoring and backups.
-With the advent of the DevOps movement, this tradition has changed dramatically.
-The management of applications, monitoring, backups, and entire cloud environments has been centralized and versioned using Infrastructure as Code.
-With containers, the deployment of applications has been standardized.
-However, a sysadmin is still required to react to state changes, that happen frequently inside a cloud native environment.
+A system administrator knows about the software, takes care of the deployment, monitoring and backups.
+With the advent of the DevOps movement, this tradition has changed drastically.
+The management of applications, monitoring, backups, and entire cloud environments has been centralized and versioned using the Infrastructure as Code approach.
+Through containers, the deployment of applications has also been standardized.
+However, a system administrator is still required to react to state changes, that happen frequently inside a cloud native environment.
 The operator therefore acts as a kind of robot sysadmin who can react directly to changes.~\cite{RED-HAT-OPERATOR}
 
 \section{Custom Resource Definitions}\label{sec:custom-resource-definitions}
@@ -21,7 +21,7 @@ The operator therefore acts as a kind of robot sysadmin who can react directly t
 In Kubernetes \textit{Custom Resource Definitions}, in short CRDs, are used to extend the Kubernetes API.
 A resource is a kubernetes API endpoint, like a Pod or Deployment.
 These endpoints and data structures are predefined by Kubernetes.
-A Custom Resource extends this, with its own endpoint and data structure.
+A Custom Resource extends these with its own endpoint and data structure.
 This allows data to be stored within the cluster.
 Custom resources can be registered and de-registered at runtime.~\cite{KUBERNETES-CRD}
 
@@ -32,9 +32,9 @@ Depending on whether a certain change takes place, the controller reacts and mak
 The controller observes at least one Kubernetes resource.
 The spec field within the resource represents the desired state.
 Based on this, the controller tries to establish the desired state in the cluster.
-So the goal of a controller is to bring the status of a cluster into the desired state.
+In summary, the goal of a controller is to make the state of a cluster match the desired state.
 \\
-This is mostly done by calls to the Kubernetes API, but can also be brought about by external API calls, this is called direct control.
+This is mostly done by calls to the Kubernetes API, but can also be reached by external API calls. This is called direct control.
 Since the state of external resources is not available within Kubernetes, such controllers usually use a status field, which is part of the Kubernetes resource, to reflect it in the cluster.
 Other controllers can monitor this and then react in turn.
 \\

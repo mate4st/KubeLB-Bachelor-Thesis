@@ -1,14 +1,12 @@
 \chapter{Conclusion}
 
-In this chapter, a conclusion will be drawn on the basic idea, it's limitations, and the load balancer technology used.
+In this chapter, a conclusion will be drawn on the basic idea, its limitations, and the load balancer technology used.
 
 \section{Kubernetes as a base}
 The idea of using a dedicated cluster for load balancing, based on the KKP model, is technically feasible.
 Thus, all load balancers are housed in an external cluster and separated from other applications.
 Furthermore, other applications that do not come directly from Kubernetes can be easily integrated via the Kubernetes API.
 Communication between LB-cluster and user-cluster can be securely mapped with service accounts.
-%Todo: cloud native ref?
-%Todo: current LB solutions vs. KubeLB
 
 \section{Limitations}
 The performance of KubeLB is strongly tied to that of the LB cluster.
@@ -17,16 +15,16 @@ Since any traffic from multiple user clusters is routed through at least one nod
 Also the resources of the cluster, in terms of CPU and memory, have to be considered to run all required load balancer instances.
 For example, if the LB cluster consists of several nodes, this increases the resource availability of CPU and memory, but not necessarily of network throughput.
 If all nodes are ultimately deployed on the same machine in a data center, this does not increase throughput.
-In practice, the network performance of the cluster is therefore heavily dependent on the underlying infrastructure, and it will not always be possible to distribute the nodes well from a network and resource perspective.
+In practice, the network performance of the cluster is therefore heavily dependant on the underlying infrastructure, and it will not always be possible to distribute the nodes well from a network and resource perspective.
 
 \section{Envoy proxy}
-Envoy turns out to be a very sophisticated Proxy.
-The configuration sometimes requires a deep understanding about network technologies.
+Envoy turns out to be a very sophisticated proxy.
+The configuration sometimes requires a deep understanding of network technologies.
 It is also necessary to test the behavior within a Kubernetes cluster, as pods are subject to certain security constraints.
 In return, it offers great flexibility and is also well suited for possible future features.
-To implement new features, the existing base configuration can be easily extended.
+To implement new features, the existing base configuration can be extended easily.
 \\
-The Control-Plane implementation is well suited for Kubernetes.
-This way, it is quite easy to manage multiple Envoy instances via a single server.
+The control-plane implementation is well suited for Kubernetes.
+Due to that it is quite easy to manage multiple Envoy instances via a single server.
 This allows to change configurations without disconnecting or restarting the load balancer.
 In this way, Envoy fulfills its main task and enables customers to change their configuration in an operational mode.

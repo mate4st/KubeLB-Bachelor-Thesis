@@ -1,13 +1,12 @@
 \chapter{Requirements}
 
-In this chapter, the framework conditions that exist at Kubermatic and are relevant for the development of the application are examined.
-In a second step, requirements for the service to be developed are to be derived from the results of the analysis.
+In this chapter, the framework conditions, that exist at Kubermatic and are relevant for the development of the application, are examined.
+Following this, requirements for the service that is to be developed are to be derived from the results of the analysis.
 
 \section{Kubermatic Kubernetes Platform}
-
 ``Kubermatic Kubernetes Platform (KKP) is in an open source project to centrally manage the global automation of thousands of Kubernetes clusters across multicloud, on-prem and edge with unparalleled density and resilience``~\cite{KKP-GITHUB}.
 
-Due to the need of a central management solution for a multi cluster Kubernetes environment, KKP came up to solve this problem.
+Due to the need of a central management solution for a multi cluster Kubernetes environment, KKP set foot to solve this problem.
 It aims to give the customer everything needed to build their own Kubernetes cloud environment. 
 This includes a Multicloud Self Service Portal, HA Self-healing Infrastructure, Multi-tenancy and User Management, Monitoring and more.
 A detailed list of the key features can be found on the Kubermatic website.\footnote{https://www.kubermatic.com/products/kubermatic/}
@@ -28,8 +27,8 @@ Especially for large scale deployments it is recommended to run several independ
 Thus, only worker nodes have to be created and connected.
 Virtual machines are created via a supported provider, which are then provisioned by KKP and added as nodes.
 \\
-The master as well as the seed cluster should be operated in a high available setup.
-This offers the advantage that the Kubernetes control plane of the customer cluster is automatically a High Available setup.
+The master as well as the seed cluster should be operated in a high availability setup.
+This offers the advantage that the Kubernetes control plane of the customer cluster is automatically a High Availability setup.
 
 
 \section{KubeLB}\label{sec:KubeLB}
@@ -37,7 +36,7 @@ This offers the advantage that the Kubernetes control plane of the customer clus
 The idea behind KubeLB is to adopt concepts of KKP for load balancing in multicloud, on-prem and edge Kubernetes environments.
 As mentioned in \autoref{sec:ExternalLoadBalancer}, load balancers need to be integrated manually to every cluster.
 This is especially needed for bare metal environments, where no cloud provider solution is available.
-The already existing open source solutions for the implementation of the load balancer, target single Kubernetes clusters, and are not designed for a highly dynamic multi cloud infrastructure.
+The already existing open source solutions for the implementation of the load balancer target single Kubernetes clusters and are not designed for a highly dynamic multi cloud infrastructure.
 \\
 The main feature is the easy integration and availability of load balancing in many, dynamically created, Kubernetes clusters.
 These clusters are referred to as \textit{user clusters} in the following.
@@ -52,9 +51,9 @@ Since this, like the load balancer, is not automatically available within a Kube
 For this purpose, a load balancer with Layer 7 properties, analogous to the Layer 4 load balancer, is to be deployed and made available within the load balancer cluster.
 All features of the Kubernetes ingress object should be supported.
 \\
-To pass the requests for a load balancer or an ingress resource to the load balancer cluster, an Agent is provided within the user clusters.
+To pass the requests for a load balancer or an ingress resource to the load balancer cluster, an agent is provided within the user clusters.
 The agent acts as a kind of cloud controller\footnote{https://kubernetes.io/docs/concepts/architecture/cloud-controller/}, which manages external resources of the cluster.
 \\
-In the cloud native community it is common to create a proposal.
-This should describe what the idea is, the goals being pursued, and include an architectural overview.
-The original proposal can be found in the Kubermatic repository\footnote{https://github.com/kubermatic/kubermatic/blob/master/docs/proposals/kubelb.md} on github.
+It is common within the cloud native community to create a proposal alongside contributions.
+A proposal should describe what the idea is, the goals that are being pursued, and include an architectural overview.
+The original proposal for KubeLB can be found in the Kubermatic repository\footnote{https://github.com/kubermatic/kubermatic/blob/master/docs/proposals/kubelb.md} on GitHub.

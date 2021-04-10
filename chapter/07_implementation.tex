@@ -7,45 +7,46 @@ A basic understanding of the programming language is assumed.
 
 \section{KubeBuilder}
 
-KubeBuilder is a framework to build Kubernetes APIs using custom resource definitions, build on top of the controller-runtime and controller-tools libraries.
+KubeBuilder is a framework to build Kubernetes APIs using custom resource definitions, built on top of the controller-runtime and controller-tools libraries.
 It is a good entrypoint to start developing an operator, as it simplifies CRD creation and controller implementation.
-Like other frameworks it provides the developer a simple abstraction and reduces boilerplate and toil.
+Like other frameworks it provides the developer with a simple abstraction and reduces boilerplate and toil.
 \\
-KubeBuilder can be used to create a new project, initiating a basic Go project structure, as well as several configuration files to deploy within a Kubernetes cluster.
-To build a controller, various modules are required, which are added by KubeBuilder to the project.
+KubeBuilder can be used to create a new project, initiate a basic Go project structure, as well as several configuration files needed to deploy within a Kubernetes cluster.
+To build a controller, various modules are required, which are added to the project by KubeBuilder.
 \\
 \newpage
-For controller specific components the controller-runtime\footnote{https://github.com/kubernetes-sigs/controller-runtime} module provides an abstraction layer.
+For controller specific components, the controller-runtime\footnote{https://github.com/kubernetes-sigs/controller-runtime} module provides an abstraction layer.
 The interaction with Kubernetes is done via the Kubernetes API which is implemented within the client-go\footnote{https://github.com/kubernetes/client-go} module.
-The controller-runtime module provides an abstraction for various components to build an operator.
+The controller-runtime module provides an abstraction for various components to build an operator:
 
 \begin{itemize}
     \item \textit{Manager} \\
     The Manager configures the go-client, a cache and is generally responsible for the management of shared resources.
-    Several controllers can be registered at a Manager, these can be started or stopped over the manager.
+    Several controllers can be registered at a Manager, these can be started or stopped through the manager.
     In addition, the manager takes over the leader election within a cluster and thus ensures regulated behavior and fail-safety.
+	Leader election is required when more than one controller is running at the time, so they don't interfere each other.
     \item \textit{Controller} \\
-    Controllers use events to trigger reconcile requests.
-    They can trigger reconcile requests based on Predicates that filter events.
+    Controllers use events originating from the Kubernetes API to trigger reconcile requests.
+    They can trigger reconcile requests based on predicates that filter events.
     \item \textit{Reconciler} \\
     Controller logic is implemented in terms of Reconcilers.
     A Reconciler implements a function which takes a reconcile request containing the name and namespace of the object to reconcile.
-    It returns a result or an error, indicating weather to requeue the request.
+    It returns a result or an error, indicating whether to requeue the request or not.
 \end{itemize}
 
 \newpage
 
 \autoref{lst:main-manager} illustrates how the three components interact together in the actual application.
 \\
-At the beginning of the application a Manager and the Reconciles are created.
-The Manager creates a client by the given configuration, that \textit{ctrl.GetConfigOrDie()} provides.
-When creating the KubeLbNodeReconciler, the client are used from the Manager.
+At the start of the application a Manager and the Reconcilers are created.
+The Manager creates a client using the configuration provided by \textit{ctrl.GetConfigOrDie()}.
+When creating the KubeLbNodeReconciler, this client is used by the Manager.
 \\
-\textit{SetupWithManager()} creates a new Controller and attach the Reconciler, the Controller is than registered at the Manager.
-The object to watch for, is declared in the function as well.
+\textit{SetupWithManager()} creates a new Controller and attaches the Reconciler, the Controller is than registered at the Manager.
+The Kubernetes object to watch for is declared in the function as well.
 As shown in \autoref{lst:nodecontroller-reconcile}, it watches for nodes.
 \\
-In the end, \textit{Start()} is called at the Manager, which starts all registered Controllers.
+In the end, \textit{Start()} is executed at the Manager, which starts all registered Controllers.
 
 \begin{lstlisting}[caption={KubeLB Agent main.go snippet - Manager and Controller}, label={lst:main-manager}]
 
@@ -81,14 +82,14 @@ In the end, \textit{Start()} is called at the Manager, which starts all register
 
 \end{lstlisting}
 
-The Controller eventually triggers a reconcile on node changes.
+The Controller eventually triggers a reconcile event on node changes.
 \\
 To save load on the Kubernetes API, the Agent keeps an internal list of the current endpoints (\textit{kubelb.Endpoints}) of the cluster.
 This means that the API does not have to be queried for the current nodes every time.
 One task of the KubeLbNodeReconciler is to update this list when changes occur.
 \\
 In order for existing load balancers to be aware of node changes in the user cluster, it is necessary to change the endpoints in the Spec field of all TCPLoadBalancer objects.
-To do this, all TCPLoadBalancers are queried via the KubeLB client, which has a configuration for load balancer cluster, and their endpoints are set to the updated ones.
+To do this, all TCPLoadBalancers are queried via the KubeLB client, which has a configuration for load balancer cluster, and their endpoints are changed to the updated ones.
 \\
 The changes are registered by the Manager in the load balancer cluster, which then passes the configuration to the Envoy load balancers as explained in more detail in \autoref{sec:envoy-control-plane}.
 \\
@@ -182,11 +183,11 @@ Both repositories contain a CLI which can perform different types of generation,
 \subsection{RBAC}
 
 As described in \autoref{sec:agent}, the Agent needs access to some Kubernetes resources like services.
-RBAC\footnote{Role-based access control~\footcite{RBAC}} is an authorization method and define the permissions for a role.
+RBAC\footnote{Role-based access control~\footcite{RBAC}} is an authorization method and defines the permissions for a role.
 The Agent and Manager are deployed with a custom role, that allows access to the needed resources.
 \\
 The permissions are closely coupled to the controller implementation.
-For reasons of clarity, it therefore makes sense to store the required permissions close to the code base.
+Therefore it makes sense to store the required permissions close to the code base.
 In \autoref{lst:nodecontroller-reconcile}, the markers are set above the reconcile method, that implements the controller logic.
 The controller needs read-only access because it reacts to changes in the nodes and needs to get them from the API server.
 \\
@@ -200,12 +201,12 @@ controller-gen rbac:roleName=agent-role paths="./pkg/controllers/agent/..." outp
 \subsection{Custom Resource Definitions}
 
 The \autoref{lst:tcplb} shows the basic struct in Go of the TCPLoadBalancer CRD.
-Like all objects in Kubernetes it contains Type-, and ObejectMeta Information, a Spec and in this case also a Status field.
+Like all objects in Kubernetes it contains Type-, and ObjectMeta information, a Spec and in this case also a Status field.
 The struct is annotated with marker comments for the controller-gen tool, which is than able to create a YAML file to deploy the CRD inside a cluster.
 \\
 The first three comments are for CRD generation, while \textit{+genclient} is needed for client generation, which is explained in \autoref{subsec:client}.
 The annotations express that this is the root object, it includes a status field, and the abbreviation is \textit{tcplb}.
-For internal serialization json tags are required.
+Json tags are required for internal serialization.
 
 \begin{lstlisting}[caption={TCPLoadBalancer CRD root struct},label={lst:tcplb}]
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -228,7 +229,7 @@ type TCPLoadBalancer struct {
 \newpage
 
 \autoref{lst:tcpbl-status} is the implementation of the TCPLoadBalancer status field.
-KubeLB mirrors the Kubernetes Service status and for that reason it makes use of the preexisting LoadBalancerStatus from the API module.
+KubeLB mirrors the Kubernetes Service status and for that purpose it makes use of the preexisting LoadBalancerStatus from the API module.
 The LoadBalancer field is marked as optional, because it is absent if there is no load balancer provisioned yet.
 
 \begin{lstlisting}[caption={TCPLoadBalancerStatus struct}, label={lst:tcpbl-status}]
@@ -245,7 +246,8 @@ type TCPLoadBalancerStatus struct {
 
 Every load balancer needs a set of Endpoints, as well as Ports to expose to the outside of the cluster.
 It is also possible to set the Type, like in a Kubernetes service.
-In any case at least one Endpoint is required, the \textit{//+kubebuilder:validation:MinItems:=1} annotation ensures that the generated Resource contains a validator.
+In any case at least one Endpoint is required.
+The \textit{//+kubebuilder:validation:MinItems:=1} annotation ensures that the generated Resource contains a validator.
 \\
 The command in \autoref{lst:crd-generation} will check the \textit{./pkg} directory for marker comments and create the CRD of version v1 inside the \textit{config/crd/base} directory.
 \\
@@ -278,7 +280,7 @@ type TCPLoadBalancerSpec struct {
 \subsection{Client}\label{subsec:client}
 
 The go-client module includes an implementation for the standard Kubernetes objects.
-Since KubeLB extends the Kubernetes API with a CRD, an implementation in Go is also required for the Agent (see \autoref{sec:agent}), to programmatically interact with the new resource.
+Since KubeLB extends the Kubernetes API with a new CRD, an implementation in Go is also required for the Agent (see \autoref{sec:agent}), to programmatically interact with the new resource.
 In order for the Agent controller to create a watch on the CRD, it needs an informer.
 The informer stores objects which it receives from the client and invoke the controller passing it the object.
 Therefore, the informer still needs a client as well as a lister to work.
@@ -298,27 +300,26 @@ The second and third ones are output and input modules, and the last one is the 
 \end{lstlisting}
 
 \section{Envoy control-plane}\label{sec:envoy-control-plane}
-
-As explained in \autoref{sec:envoy}, Envoy was chosen as a load balancer among others because of the Data plane API.
+As explained in \autoref{sec:envoy}, Envoy was chosen as a load balancer among others because of the data plane API.
 The Envoy data plane API\footnote{https://github.com/envoyproxy/data-plane-api} is implemented by the go-control-plane\footnote{https://github.com/envoyproxy/go-control-plane} module.
 \\
-The module provides a snapshot cache which needs to be initialized, updated and invalidated, as well as a grpc based API server implementation.
+The module provides a snapshot cache which needs to be initialized, updated and invalidated, as well as a gRPC\footnote{https://en.wikipedia.org/wiki/GRPC} based API server implementation, that allows bidirectional communication.
 To expose the Envoy data-plane API server to the cluster, the Manager deployment consist of a service.
 \\
 An Envoy deployment is created for every TCPLoadBalancer.
-Each deployment get a bootstrap configuration which tells Envoy where to find the control-plane, as well as a unique node id.
-This way Envoy will connect to the control-plane and receive the current configuration for its node id.
+Each deployment receives a bootstrap configuration which tells Envoy where to find the control-plane, as well as a unique node id.
+This way Envoy will connect to the control-plane and receive the latest configuration for its node id.
 \\
 The module uses snapshots to represent envoy configurations, that are stored in a cache.
 A controller inside the Manager watches for changes to the TCPLoadBalancer resources and reconciles multiple Kubernetes objects like service and deployments.
-Although the envoy snapshot cache is not persisted inside Kubernetes, the Manager follows the same approach and reconciles the envoy snapshot like the other resources.
-The function is called by the TCPLoadBalancerReconciler and gets the current TCPLoadBalancer passed.
+Although the envoy snapshot cache is not persisted inside Kubernetes, the Manager follows the same approach and reconciles the Envoy snapshot like the other resources.
+The function is called by the TCPLoadBalancerReconciler and receives the current TCPLoadBalancer.
 Snapshots are identified by a unique name and a version.
 The actual snapshot is the latest version inside the snapshot cache.
-The snapshot created from the provided and probably updated TCPLoadBalancer object is the desired one.
-If no snapshot is present, it gets simply initialized with the desired one.
+The snapshot created from the provided and possibly updated TCPLoadBalancer object is the desired one.
+If no snapshot is present, it will be initialized with the desired one.
 Otherwise, if a change is detected it will update the snapshot and increase the version.
-The comparison is done based on the desired and actual snapshots, if they differ the snapshot cache needs to be updated.
+The comparison is done based on the desired and actual snapshots and if they differ, the snapshot cache needs to be updated.
 \\
 
 \begin{lstlisting}[caption={Envoy snapshot reconciliation}, label={lst:snapshot-reconcile}]
