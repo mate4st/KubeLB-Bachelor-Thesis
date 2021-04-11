@@ -42,7 +42,7 @@ The main feature is the easy integration and availability of load balancing in m
 These clusters are referred to as \textit{user clusters} in the following.
 For this purpose, a dedicated cluster is provided, which deploys a load balancer within the cluster, referred to as \textit{load balancer cluster} in the following.
 In order to expose the load balancer in the cluster to the outside world, it is necessary for the load balancer cluster to have a load balancer implementation.
-This has the advantage that load balancer integration only has to be performed once for the load balancer cluster, and simplifies the management of external IP addresses, as these can be managed centrally.
+This has the advantage that load balancer integration only has to be performed once for the load balancer cluster and simplifies the management of external IP addresses, as these can be managed centrally.
 All features of the Kubernetes Service object of the load balancer type should be supported.
 \\
 In addition to the load balancer integration, layer 7 load balancing should also be offered.
@@ -55,5 +55,5 @@ To pass the requests for a load balancer or an ingress resource to the load bala
 The agent acts as a kind of cloud controller\footnote{https://kubernetes.io/docs/concepts/architecture/cloud-controller/}, which manages external resources of the cluster.
 \\
 It is common within the cloud native community to create a proposal alongside contributions.
-A proposal should describe what the idea is, the goals that are being pursued, and include an architectural overview.
+A proposal should describe what the idea is, the goals that are being pursued and include an architectural overview.
 The original proposal for KubeLB can be found in the Kubermatic repository\footnote{https://github.com/kubermatic/kubermatic/blob/master/docs/proposals/kubelb.md} on GitHub.

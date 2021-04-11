@@ -205,7 +205,7 @@ Like all objects in Kubernetes it contains Type-, and ObjectMeta information, a 
 The struct is annotated with marker comments for the controller-gen tool, which is than able to create a YAML file to deploy the CRD inside a cluster.
 \\
 The first three comments are for CRD generation, while \textit{+genclient} is needed for client generation, which is explained in \autoref{subsec:client}.
-The annotations express that this is the root object, it includes a status field, and the abbreviation is \textit{tcplb}.
+The annotations express that this is the root object, it includes a status field and the abbreviation is \textit{tcplb}.
 Json tags are required for internal serialization.
 
 \begin{lstlisting}[caption={TCPLoadBalancer CRD root struct},label={lst:tcplb}]
@@ -266,7 +266,7 @@ type TCPLoadBalancerSpec struct {
 	Ports []LoadBalancerPort `json:"ports,omitempty"`
 
 	// type determines how the Load Balancer Service is exposed. Defaults to ClusterIP. Valid
-	// options are ClusterIP, NodePort, and LoadBalancer.
+	// options are ClusterIP, NodePort and LoadBalancer.
 	// +optional
 	// +kubebuilder:default:=ClusterIP
 	Type corev1.ServiceType `json:"type,omitempty"

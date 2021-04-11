@@ -8,8 +8,8 @@ This promotes a homogeneous environment of Kubernetes clusters without introduci
 \section{Manager}\label{sec:manager}
 
 The Manager, as already explained in \autoref{sec:operator-pattern}, will serve as an operator and implement a controller comparable to \autoref{sec:controllers}.
-Its task is to observe a CRD~(see \autoref{sec:custom-resource-definitions}), and operate the load balancers within the load balancer cluster.
-Those CRDs hold the desired configuration for the load balancers, and are called TCPLoadBalancer for Layer 4, and HTTPLoadBalancer for Layer 7 load balancing.
+Its task is to observe a CRD~(see \autoref{sec:custom-resource-definitions}) and operate the load balancers within the load balancer cluster.
+Those CRDs hold the desired configuration for the load balancers and are called TCPLoadBalancer for Layer 4, and HTTPLoadBalancer for Layer 7 load balancing.
 \\
 Within the load balancer cluster, different Kubernetes resources are used to reflect this.
 The deployment~(see \autoref{subsec:deployment}) creates the actual load balancer within the cluster.
@@ -42,7 +42,7 @@ Within the user cluster, the Agent observes the service resource.
 If a user creates a service of type LoadBalancer, the Agent recognizes the service and creates a TCPLoadBalancer inside the load balancer cluster.
 \\
 The Manager observes the TCPLoadBalancer CRD, which contains the necessary information to configure the load balancer.
-Based on this, the Manager creates or updates the load balancer deployment, and the associated service.
+Based on this, the Manager creates or updates the load balancer deployment and the associated service.
 
 
 \begin{figure}[H]

@@ -11,7 +11,7 @@ The operator knows the system and knows how to deploy and configure it for diffe
 \\
 A system administrator knows about the software, takes care of the deployment, monitoring and backups.
 With the advent of the DevOps movement, this tradition has changed drastically.
-The management of applications, monitoring, backups, and entire cloud environments has been centralized and versioned using the Infrastructure as Code approach.
+The management of applications, monitoring, backups and entire cloud environments has been centralized and versioned using the Infrastructure as Code approach.
 Through containers, the deployment of applications has also been standardized.
 However, a system administrator is still required to react to state changes, that happen frequently inside a cloud native environment.
 The operator therefore acts as a kind of robot sysadmin who can react directly to changes.~\cite{RED-HAT-OPERATOR}
@@ -34,7 +34,8 @@ The spec field within the resource represents the desired state.
 Based on this, the controller tries to establish the desired state in the cluster.
 In summary, the goal of a controller is to make the state of a cluster match the desired state.
 \\
-This is mostly done by calls to the Kubernetes API, but can also be reached by external API calls. This is called direct control.
+This is mostly done by calls to the Kubernetes API, but can also be reached by external API calls.
+This is called direct control.
 Since the state of external resources is not available within Kubernetes, such controllers usually use a status field, which is part of the Kubernetes resource, to reflect it in the cluster.
 Other controllers can monitor this and then react in turn.
 \\

@@ -3,7 +3,7 @@
 
 \section{Motivation and goal}
 %Cloud computing
-With the advent of cloud computing platforms such as Amazon Web Services (AWS), Google Cloud Platform (GCP) or Microsoft Azure, the supply of dynamically scalable compute resources has changed.
+With the advent of cloud computing platforms such as Amazon Web Services (AWS), Google Cloud Platform (GCP) or Microsoft Azure, the supply of dynamically scalable compute resources have changed.
 To ensure the scalability of an application, this can be used to dynamically create new resources in case of a large load on an existing systems.
 This requires a dynamic environment in which new servers can be automatically integrated into an existing infrastructure.
 Among other things, network configurations and server provisioning must be ensured.
@@ -15,7 +15,7 @@ One of these systems, which has found great acceptance in the market, is Kuberne
 It follows the cloud-native\footnote{https://github.com/cncf/toc/blob/main/DEFINITION.md} approach, which is due to a constantly changing environment.
 In the following, the terms Cluster refers to a Kubernetes cluster and nodes are the number of servers that are grouped together in a cluster.
 In a production environment, furthermore, it is recommended to run Kubernetes in a highly available\footnote{https://en.wikipedia.org/wiki/High\_availability} setup.
-That is, there is a failover mechanism in case the master node crashes and ensures high availabilities.
+Kubernetes provides a failover mechanism in case a master node crashes and ensures high availabilities.
 In the event of a crash, or once the number of nodes in a cluster changes, Kubernetes ensures that the application can continue to run.
 With Kubernetes, it is therefore comparatively easy to distribute an application across multiple servers and ensure scalability.
 \\
@@ -46,5 +46,5 @@ The interaction of the components is then modeled based on the underlying featur
 In conclusion, the final load balancer choice is discussed.
 Chapter seven describes the implementation of the components developed in chapter six and their integration into Kubernetes.
 Following the implementation, software tests will be described.
-The final chapter of the thesis draws a conclusion with regard to the technologies used, and the architectural design decisions.
+The final chapter of the thesis draws a conclusion with regard to the technologies used and the architectural design decisions.
 This is followed in the last chapter by an outlook on further features that have not yet been implemented.

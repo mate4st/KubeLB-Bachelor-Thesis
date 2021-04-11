@@ -28,7 +28,7 @@ Due to the performance loss and problems with reliability this is not a recommen
 \subsection{iptables proxy mode}
 
 This mode entirely relies on iptables and does not proxy all traffic directly through kube-proxy.
-For each service kube-proxy installs a set of iptable rules, which capture traffic to the service's ClusterIP and port, and forward the traffic to the Pod.
+For each service kube-proxy installs a set of iptable rules, which capture traffic to the service's ClusterIP and port and forward the traffic to the Pod.
 The endpoint is chosen randomly by default.
 \\
 Iptables won't recognize failures like timeouts.
@@ -42,7 +42,7 @@ IPVS (IP Virtual Server) is a linux module built on top of iptables.
 It was developed for load balancing within the Linux kernel and offers a significant performance increase for large clusters compared to iptables.
 With a certain number of rules, iptables loses a lot of performance, because all rules have to be processed.
 There are scenarios that IPVS cannot handle, for example NodePort type service.
-In these cases iptables are used as fallback, but with ipset\footnote{https://ipset.netfilter.org/} to keep the number of rules low.
+In these cases iptables are used as fallback but in conjunction with ipset\footnote{https://ipset.netfilter.org/} to keep the number of rules low.
 \\
 Since IPVS comes with a load balancer implementation, it also offers several load balancing algorithms to choose from.~\cite{KUBERNETES-SERVICE}
 
@@ -55,7 +55,7 @@ If the type is not specified, ClusterIP is set as default, and the service is on
 \\
 With the type NodePort, a random port, by default ranging between 30000 and 32767, is chosen and opened on all nodes of the cluster.
 Thus, the service is externally accessible on all nodes of the cluster via the allocated port.
-At this point a manually configured external load balancer which uses the nodes, and the appropriate port as endpoints, would work well.
+At this point a manually configured external load balancer which uses the nodes and the appropriate port as endpoints, would work well.
 But since the node ports can change, because they are usually allocated randomly, it makes sense to automate this process. This also removes the need for manual configurationm, which could cause human errors.
 \\
 With the type LoadBalancer, service are in principle accessible from the outside in the same way as the type NodePort. Though with the small difference that an external LoadBalancer is requested and a status field is set.
@@ -70,7 +70,7 @@ It watches for ingress objects and configures itself accordingly.
 They usually serve as entry points for HTTP applications within the cluster.
 Therefore, it is mandatory to have a service of type LoadBalancer that points to the pods of the Ingress Controller.
 This then forwards the traffic to the appropriate pods based on rules from an Ingress object.
-Thus applications do not have to be directly exposed via a service, but can be appropriately routed to via an ingress.
+Thus, applications do not have to be directly exposed via a service but can be appropriately routed to via an ingress.
 In addition to the features of the IngressController, this method also offers a more dynamic approach, since the entry point into the cluster only has to be defined once.
 TLS termination can also be performed at the ingress controller, which simplifies certificate management.~\cite{KUBERNETES-INGRESS}
 \\
@@ -86,4 +86,4 @@ The cloud controller manager takes care of the connection of cloud-specific API'
 Also ingress controllers can be installed automatically without any manual effort.
 \\
 In a bare metal environment, there is no one-size-fits-all solution, as it is highly dependent on the surrounding infrastructure.
-There are a number of open source solutions such as MetalLB\footnote{https://metallb.universe.tf/} or kube-vip\footnote{https://kube-vip.io/}, but these require manual setup.
+There are a number of open source solutions such as MetalLB\footnote{https://metallb.universe.tf/} or kube-vip\footnote{https://kube-vip.io/} but these require manual setup.

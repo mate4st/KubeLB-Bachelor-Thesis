@@ -2,8 +2,8 @@
 
 This chapter provides a basic understanding of load balancing and Kubernetes.
 The focus is mainly on the parts that are needed for the KubeLB Project.
-It is not going into detail thorougly and won't cover all load balancing features, algorithms and Kubernetes possibilities.
-The load balancing part focuses on features that are commonly used inside a cloud environment, especially Kubernetes, and is not covering other scenarios.
+It is not going into detail thoroughly and won't cover all load balancing features, algorithms and Kubernetes possibilities.
+The load balancing part focuses on features that are commonly used inside a cloud environment, especially Kubernetes and is not covering other scenarios.
 
 \section{Load Balancing}
 
@@ -15,7 +15,7 @@ Load balancers offer a variety of algorithms for how traffic is distributed amon
 \begin{itemize}\label{item:lb-algorithms}
     \item \textit{Random Load Balancing} \\
     As the name suggests, traffic is distributed randomly to the endpoints.
-    This can result in one endpoint receiving a lot of traffic, and others receiving very little traffic.
+    This can result in one endpoint receiving a lot of traffic and others receiving very little.
     \item \textit{Round Robin} \\
     Traffic is sequentially forwarded to each endpoint.
     This method provides an evenly distributed amount of traffic to the endpoints.
@@ -37,7 +37,7 @@ Load balancers can operate on different levels of the Open Systems Interconnecti
 Those are called layer 4 (Transport Layer) or layer 7 (Application layer) load balancers.
 \\
 Layer 4 load balancers take place on the Transport Layer, meaning that they are handling transport packets like TCP or UDP.
-The fact that messages are neither inspected nor decrypted allows them to be forwarded quickly, efficiently, and securely.
+The fact that messages are neither inspected nor decrypted allows them to be forwarded quickly, efficiently and securely.
 \\
 Layer 7 load balancers operate on the Application Layer, using protocols such as Hypertext Transfer Protocol and Stream Control Transmission Protocol (SCTP).
 At this level the load balancer does have more information and can perform smarter decisions.
@@ -45,7 +45,7 @@ In terms of HTTP this means it can take routing decisions based upon HTTP Header
 Transport Layer Security (TLS) termination is also handled by Layer 7 load balancers.~\cite{NICHOLSON-LOAD-BALANCING}
 
 \section{Kubernetes}
-``Kubernetes is an open-source container-orchestration system for automating computer application deployment, scaling, and management``\cite{Kubernetes}.
+``Kubernetes is an open-source container-orchestration system for automating computer application deployment, scaling and management``\cite{Kubernetes}.
 Kubernetes clusters contain a so called control-plane which is responsible for the cluster state.
 The control-plane is a set of controllers which observe different objects of the cluster, react to change and tries to bring the cluster into its desired state.
 It also holds information about the current cluster status.
@@ -60,7 +60,7 @@ It also holds information about the current cluster status.
 
 As \autoref{fig:kubernetes} lines out, a node within the cluster consists of two components running on the host machine.
 
-The kubelet daemon is responsible for the node status, and the containers that are deployed to it.
+The kubelet daemon is responsible for the node status and the containers that are deployed to it.
 It serves like an agent to the cluster and communicates with the application programming interface (API) server.
 Together with kubelet, the host needs an application that implements the Container Runtime Interface.\footnote{CRI: the Container Runtime Interface\footcite{CRI}}
 This is mandatory to run the actual container.
@@ -94,7 +94,7 @@ A pod is a Kubernetes object, that describes a group of one or more containers.
 Kubernetes manages pods instead of containers directly, so a pod is a wrapper around one or more containers.
 It holds information about the image, volumes, ports and more.
 An example of the information of a pod can be found at \textit{spec.template} in \autoref{fig:deployment}.
-The containers inside a pod share storage, network, and runtime specifications.
+The containers inside a pod share storage, network and runtime specifications.
 \\
 There are use cases where two programs are tightly coupled together, so that it makes sense to deploy them together in one pod.
 This ensures that the containers are deployed on the same node and have the same resources at their disposal, which has a positive effect on performance and maintenance.
@@ -110,7 +110,7 @@ The \autoref{fig:deployment} illustrates an example deployment, with two contain
 Deployments have a selector that tells the controller which pod is controlled by this deployment.
 The \textit{app: foo-bar} label is used as a selector and is also set within the template so that all pods created with this template are referenced to the deployment.
 If applied, Kubernetes will create one pod, according to the replicas field, with two containers.
-The containers use the same image, but with different environment variables and ports.
+The containers use the same image but with different environment variables and ports.
 Those control what the HTTP service of the image will return and on what port it listens.~\cite{KUBERNETES-DEPLOYMENT}
 
 \begin{figure}[H]
@@ -143,7 +143,7 @@ For a service without a selector, no associated endpoint is created and must be 
 TCP, UDP and SCTP are supported as protocols, while TCP is the default.
 
 \autoref{fig:service} shows an example service for the previous foo-bar deployment.
-It exposes two ports - one named foo at port 8080, and one named bar at port 8081.
+It exposes two ports - one named foo at port 8080 and one named bar at port 8081.
 \textit{targetPort} describes the port of the actual pod and could be omitted because it is the same value as \textit{port}, which describes the port to expose by the service.
 The selector is \textit{app: foo-bar}, which was assigned to the pods as labels in the previous deployment.
 
@@ -160,7 +160,7 @@ These services can be addressed via an internal DNS.
 Those DNS names follow by default this pattern: my-svc.my-namespace.svc.cluster-domain.example.
 This is also the reason why the service name needs to be a valid DNS label.
 \\
-Type \textit{NodePort} allocates a random port, by default in the range of 30000-32767, and opens it on all nodes of the cluster.
+Type \textit{NodePort} allocates a random port, by default in the range of \textit{30000-32767} and opens it on all nodes of the cluster.
 Thus, the service is externally accessible on all nodes of the cluster via the allocated port.
 \\
 Type \textit{LoadBalancer} works similar to node port with the addition of an external implementation to dynamically create a load balancer and point it to the opened node ports.
@@ -171,7 +171,7 @@ The ingress object is built as an addition to services and offers load balancing
 It exposes HTTP and HTTPS routes and route the traffic to a corresponding service within the cluster.
 It provides a number of configurable rules that decide to which backend the traffic is routed.
 Thus, applications do not have to be directly exposed via a service, they only need to be internally accessible via ClusterIP.~\cite{KUBERNETES-INGRESS}
-\autoref{fig:ingress} shows an example of an ingress object that forwards incoming HTTP requests with the /foo path to the foo-service on port 8080, and /bar path to the bar-service on port 8081.
+\autoref{fig:ingress} shows an example of an ingress object that forwards incoming HTTP requests with the \textit{/foo} path to the \textit{foo-service} on port \textit{8080} and \textit{/bar} path to the \textit{bar-service} on port \textit{8081}.
 
 \begin{figure}[H]
     \centering
