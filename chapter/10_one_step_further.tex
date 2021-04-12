@@ -14,7 +14,7 @@ In conjunction with Cert-Manager\footnote{https://cert-manager.io/}, this enable
 Secret management systems such as Vault\footnote{https://www.vaultproject.io/} can also be integrated into KubeLB Manager.
 \\
 In case the customer has a certificate without using an internal secret management, a manual creation of the secret within the KubeLB cluster could also be a solution.
-An integration of user cluster secrets made usable in LB-CLuster is also an option, even if it is not the best solution from a security point of view.
+An integration of user cluster secrets made available to a load balancer cluster is also an option, even if it is not the best solution from a security point of view.
 
 \section{Multi-cluster Service Load Balancing}
 
@@ -26,5 +26,5 @@ KubeLB could be a solution to that and provide the load balancer instance with t
 Today's approaches use a service mesh like istio\footnote{https://istio.io/latest/docs/concepts/what-is-istio/}, which gives the cluster operator complete control of the traffic flow.
 However, these are not trivial to configure and might have a big impact on the cluster, since they affect the entire networking.
 \\
-The KEP-1645\footnote{https://github.com/kubernetes/enhancements/tree/master/keps/sig-multicluster/1645-multi-cluster-services-api} (Kubernetes Enhancement Proposal) of sig-multicluster, suggests an implementation of a multi cluster service api to the Kubernetes Core.
+The KEP-1645\footnote{https://github.com/kubernetes/enhancements/tree/master/keps/sig-multicluster/1645-multi-cluster-services-api} (Kubernetes Enhancement Proposal) by the special interest group multicluster, suggests an implementation of a multi cluster service api to the Kubernetes Core.
 This should help with the implementation for KubeLB and could be a convenient and clean way for a multi-cluster service load balancing solution, without any third party requirements.

@@ -38,7 +38,7 @@ Because of the use of the low-level iptables, this method has less overhead and 
 
 \subsection{IPVS proxy mode}
 
-IPVS (IP Virtual Server) is a linux module built on top of iptables.
+IPVS (IP Virtual Server) is a Linux module built on top of iptables.
 It was developed for load balancing within the Linux kernel and offers a significant performance increase for large clusters compared to iptables.
 With a certain number of rules, iptables loses a lot of performance, because all rules have to be processed.
 There are scenarios that IPVS cannot handle, for example NodePort type service.
@@ -56,9 +56,11 @@ If the type is not specified, ClusterIP is set as default, and the service is on
 With the type NodePort, a random port, by default ranging between 30000 and 32767, is chosen and opened on all nodes of the cluster.
 Thus, the service is externally accessible on all nodes of the cluster via the allocated port.
 At this point a manually configured external load balancer which uses the nodes and the appropriate port as endpoints, would work well.
-But since the node ports can change, because they are usually allocated randomly, it makes sense to automate this process. This also removes the need for manual configurationm, which could cause human errors.
+But since the node ports can change, because they are usually allocated randomly, it makes sense to automate this process.
+This also removes the need for manual configuration, which could cause human errors.
 \\
-With the type LoadBalancer, service are in principle accessible from the outside in the same way as the type NodePort. Though with the small difference that an external LoadBalancer is requested and a status field is set.
+With the type LoadBalancer, service are in principle accessible from the outside in the same way as the type NodePort.
+Though with the small difference that an external LoadBalancer is requested and a status field is set.
 Since the LoadBalancer is not part of Kubernetes, it requires an external configuration of a load balancer.
 Within the Kubernetes cluster, a controller is installed that watches for the type LoadBalancer and then, depending on the infrastructure setup, creates or configures an external load balancer and sets the status within the cluster.
 The status field should be updated with an allocated IP address of the load balancer, that is used to access the application from the outside.~\cite{KUBERNETES-SERVICE}
